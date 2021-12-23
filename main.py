@@ -2,7 +2,7 @@ from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user
 from flask_migrate import Migrate
 from app import app,db
-from app.model import User
+from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
 
 Migrate(app, db)
 
@@ -12,6 +12,11 @@ def make_chell_context():
         app=app,
         db=db,
         User=User,
+        Item=Item,
+        Item_type=Item_type,
+        Colection=Colection,
+        item_in_collection=item_in_collection,
+        User_Collection=User_Collection,
     )
 
 @app.route('/')

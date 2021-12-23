@@ -1,7 +1,9 @@
 {% if current_user.is_authenticated %}
     <div>
         <h1> {{ current_user.name }} </h1>
-        <p>Voçe so visuliaram esse texto caso voçe esteja logado</p>
+        <p>Voçe esta logado</p>
+        <a href="">Abrir CardBox</a>
+        <a href="">Visualizar Coleção</a>
         <a href="{{ url_for('logout') }}">Sair</a>
     </div>
 
