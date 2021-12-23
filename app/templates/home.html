@@ -2,9 +2,8 @@
     <div>
         <h1> {{ current_user.name }} </h1>
         <p>Voçe esta logado</p>
-        <a href="">Abrir CardBox</a>
+        <a href="{{ url_for('itens') }}">Cadastrar Novo Item</a>
         <br>
-        <a href="">Visualizar Coleção</a>
         <br>
         <a href="{{ url_for('logout') }}">Sair</a>
     </div>

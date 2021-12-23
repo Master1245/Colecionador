@@ -3,6 +3,7 @@ from flask_login import login_user, logout_user
 from flask_migrate import Migrate
 from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
+from werkzeug.security import generate_password_hash
 
 Migrate(app, db)
 
@@ -19,9 +20,9 @@ def make_chell_context():
         User_Collection=User_Collection
     )
 
-@app.route('/')
-def home():
-    return render_template('home.html')
+# @app.route('/' , methods=['GET', 'POST'])
+# def home():
+#     return render_template('home.html')
 
 @app.route('/register' ,methods=['GET','POST'])
 def register():
@@ -59,7 +60,11 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/itens', methods=['GET','POST'])
-def itens():
-    pass
+@app.route('/itens/<email>', methods=['GET','POST'])
+def itens(email):
+    print(email)
+    user = User.query.filter_by(email=email).first()
+    if user.is_authenticated:
+        return render_template('itens.html', user=user)
+
 app.run(debug=True)

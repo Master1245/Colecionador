@@ -23,7 +23,7 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password, password)
 
     def __repr__(self):
-        return '<User %r>' % self.__name
+        return '<User %r>' % self.name
 
 class Item(db.Model, UserMixin):
     __tablename__ = 'items'
