@@ -15,12 +15,12 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(64), nullable=False)
 
     def __init__(self, name, email, password):
-        self.__name = name
-        self.__email = email
-        self.__password = generate_password_hash(password)
+        self.name = name
+        self.email = email
+        self.password = generate_password_hash(password)
 
     def verify_password(self, password):
-        return check_password_hash(self.__password, password)
+        return check_password_hash(self.password, password)
 
     def __repr__(self):
         return '<User %r>' % self.__name
@@ -30,14 +30,16 @@ class Item(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(64), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    hash = db.Column(db.String(200), nullable=False)
     type_id = db.Column(db.Integer, db.ForeignKey('item_types.id'))
     # user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    def __init__(self, name, description, user_id, type):
+    def __init__(self, name, description, user_id, type, hash):
         self.__name = name
         self.__description = description
         self.__user_id = user_id
         self.__type = type
+        self.__hash = hash
 
     def __repr__(self):
         return '<Item %r>' % self.__name
@@ -66,7 +68,7 @@ class Colection(db.Model, UserMixin):
     def __repr__(self):
         return '<Colection %r>' % self.__name
 
-class item_in_collection():
+class item_in_collection(db.Model, UserMixin):
     __tablename__ = 'item_in_collection'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     item_id = db.Column(db.Integer, db.ForeignKey('items.id'))
@@ -79,10 +81,10 @@ class item_in_collection():
     def __repr__(self):
         return '<item_in_collection %r>' % self.__collection_id, " <item_id %r>", self.__item_id
 
-class User_Collection():
+class User_Collection(db.Model, UserMixin):
     __tablename__ = 'user_collection'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     collection_id = db.Column(db.Integer, db.ForeignKey('colections.id'))
 
     def __init__(self, user_id, collection_id):

@@ -16,7 +16,7 @@ def make_chell_context():
         Item_type=Item_type,
         Colection=Colection,
         item_in_collection=item_in_collection,
-        User_Collection=User_Collection,
+        User_Collection=User_Collection
     )
 
 @app.route('/')
@@ -59,4 +59,7 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/itens', methods=['GET','POST'])
+def itens():
+    pass
 app.run(debug=True)
