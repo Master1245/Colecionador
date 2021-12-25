@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
 from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
@@ -48,10 +48,10 @@ def login():
         user = User.query.filter_by(email=email).first()
         
         if not user or user.verify_password(password):
-            return redirect(url_for('login.html'))
+            return redirect(url_for('login'))
         
         login_user(user)
-        return redirect(url_for('home'))
+        return redirect(url_for("itens"))
 
     return render_template('login.html')
 
@@ -60,11 +60,11 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/itens/<email>', methods=['GET','POST'])
-def itens(email):
-    print(email)
-    user = User.query.filter_by(email=email).first()
-    if user.is_authenticated:
-        return render_template('itens.html', user=user)
+@app.route('/itens/' , methods=['GET','POST'])
+def itens():
+    if current_user.is_authenticated:
+        return "<h1>Hello, {current_user.name}!</h1>".format(current_user=current_user)
+    else:
+        return "<h1>Hello, Guest!</h1>"
 
 app.run(debug=True)
