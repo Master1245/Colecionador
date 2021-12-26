@@ -20,9 +20,9 @@ def make_chell_context():
         User_Collection=User_Collection
     )
 
-# @app.route('/' , methods=['GET', 'POST'])
-# def home():
-#     return render_template('home.html')
+@app.route('/' , methods=['GET', 'POST'])
+def home():
+    return render_template('home.html')
 
 @app.route('/register' ,methods=['GET','POST'])
 def register():
@@ -63,8 +63,8 @@ def logout():
 @app.route('/itens/' , methods=['GET','POST'])
 def itens():
     if current_user.is_authenticated:
-        return "<h1>Hello, {current_user.name}!</h1>".format(current_user=current_user)
+        return "<h1>Hello, {current_user.name}!</h1> <br> <a href='/logout'>Sair</a>".format(current_user=current_user)
     else:
-        return "<h1>Hello, Guest!</h1>"
+        return "<h1>FAVOR FAZER LOGIN</h1> <br> <a href='/login'>Login</a>"
 
 app.run(debug=True)
