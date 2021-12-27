@@ -32,17 +32,15 @@ class Item(db.Model, UserMixin):
     description = db.Column(db.Text, nullable=False)
     hash = db.Column(db.String(200), nullable=False)
     type_id = db.Column(db.Integer, db.ForeignKey('item_types.id'))
-    # user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-    def __init__(self, name, description, user_id, type, hash):
-        self.__name = name
-        self.__description = description
-        self.__user_id = user_id
-        self.__type = type
-        self.__hash = hash
+    def __init__(self, name, description, type, hash):
+        self.name = name
+        self.description = description
+        self.type = type
+        self.hash = hash
 
     def __repr__(self):
-        return '<Item %r>' % self.__name
+        return '<Item %r>' % self.name
 
 class Item_type(db.Model, UserMixin):
     __tablename__ = 'item_types'

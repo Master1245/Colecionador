@@ -4,6 +4,8 @@ from flask_migrate import Migrate
 from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
 from werkzeug.security import generate_password_hash
+from app.AWS import upload_img
+import os
 
 Migrate(app, db)
 
@@ -44,15 +46,13 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        
         user = User.query.filter_by(email=email).first()
         
         if not user or user.verify_password(password):
             return redirect(url_for('login')), "<h1>Senha Incorreta Ou Usuario não cadastrado</h1>"
         
         login_user(user)
-
-        return redirect(url_for("itens"))
+        return redirect(url_for("home"))
 
     return render_template('login.html')
 
@@ -66,5 +66,24 @@ def logout():
 def itens():
     return render_template('itens.html')
   
+@app.route('/register_item' , methods=['GET','POST'])    
+@login_required
+def register_item():
+    if request.method == 'POST':
+        name = request.form['name']
+        description = request.form['description']
+        item_type = request.form['item_type']
+        img = request.files['img']
+        hash = generate_password_hash(name)
+        item = Item(name, description, item_type, hash)
+        db.session.add(item)
+        db.session.commit() 
+        basepath = os.path.dirname(__file__)
+        upload_path = os.path.join(basepath+ "/CARDS/", '',"img"+".jpg")
+        img.save(upload_path)
+        upload_img("img.jpg",hash)
+        return redirect(url_for('itens'))
 
+    return render_template('register_item.html')
+    
 app.run(debug=True)
