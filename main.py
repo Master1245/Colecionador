@@ -51,7 +51,7 @@ def login():
             return redirect(url_for('login')), "<h1>Senha Incorreta Ou Usuario não cadastrado</h1>"
         
         login_user(user)
-        
+
         return redirect(url_for("itens"))
 
     return render_template('login.html')
@@ -62,10 +62,9 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/itens/' , methods=['GET','POST'])
+@login_required
 def itens():
-    if current_user.is_authenticated:
-        return "<h1>Hello, {current_user.name}!</h1> <br> <a href='/logout'>Sair</a>".format(current_user=current_user)
-    else:
-        return "<h1>FAVOR FAZER LOGIN</h1> <br> <a href='/login'>Login</a>"
+    return render_template('itens.html')
+  
 
 app.run(debug=True)
