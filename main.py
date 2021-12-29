@@ -1,3 +1,4 @@
+from boto3 import client
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
@@ -64,6 +65,8 @@ def logout():
 @app.route('/itens/' , methods=['GET','POST'])
 @login_required
 def itens():
+    user = current_user.id
+    
     return render_template('itens.html')
   
 @app.route('/register_item' , methods=['GET','POST'])    
@@ -79,11 +82,16 @@ def register_item():
         db.session.add(item)
         db.session.commit() 
         basepath = os.path.dirname(__file__)
-        upload_path = os.path.join(basepath+ "/CARDS/", '',"img"+".jpg")
+        upload_path = os.path.join(basepath+ "/CARDS/", '',img.filename)
         img.save(upload_path)
-        upload_img("img.jpg",hash)
+        upload_img(img.filename,hash)
         return redirect(url_for('itens'))
 
     return render_template('register_item.html')
     
 app.run(debug=True)
+
+
+# SELECT * FROM user_collection WHERE user_id=1
+
+# SELECT I.name, I.hash FROM item_in_collection AS C, items AS I WHERE C.collection_id=1 AND C.item_id=I.id ORDER BY I.name
