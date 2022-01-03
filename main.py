@@ -1,3 +1,4 @@
+from typing import Collection
 from boto3 import client
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
@@ -5,7 +6,7 @@ from flask_migrate import Migrate
 from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
 from werkzeug.security import generate_password_hash
-from app.AWS import upload_img
+from app.AWS import upload_img, get_img
 import os
 
 Migrate(app, db)
@@ -65,9 +66,24 @@ def logout():
 @app.route('/itens/' , methods=['GET','POST'])
 @login_required
 def itens():
-    user = current_user.id
+    collections = []
     
-    return render_template('itens.html')
+    # SELECT C.collection_id FROM user_collection AS C WHERE user_id=1
+    p = User_Collection.query.filter_by(user_id=current_user.id).all()
+    for itens in p:
+        collections.append(itens.collection_id)
+    # SELECT I.name, I.hash 
+    # FROM item_in_collection AS C, items AS I 
+    # WHERE C.collection_id=1 AND C.item_id=I.id ORDER BY I.name
+    itens_bd = item_in_collection.query.filter(item_in_collection.collection_id.in_(collections)).order_by(item_in_collection.item_id).all()
+    itens = []
+    for item in itens_bd:
+        itens.append(item.item_id)
+    itens_bd = Item.query.filter(Item.id.in_(itens)).all()
+    img = []
+    for iten in itens_bd:
+        img.append(get_img(iten.hash))
+    return render_template('itens.html' , itens=img)
   
 @app.route('/register_item' , methods=['GET','POST'])    
 @login_required
@@ -82,9 +98,9 @@ def register_item():
         db.session.add(item)
         db.session.commit() 
         basepath = os.path.dirname(__file__)
-        upload_path = os.path.join(basepath+ "/CARDS/", '',img.filename)
+        upload_path = os.path.join(basepath+ "/CARDS/", '',"img.jpg")
         img.save(upload_path)
-        upload_img(img.filename,hash)
+        upload_img("img.jpg",hash)
         return redirect(url_for('itens'))
 
     return render_template('register_item.html')
@@ -92,6 +108,6 @@ def register_item():
 app.run(debug=True)
 
 
-# SELECT * FROM user_collection WHERE user_id=1
+# SELECT C.collection_id FROM user_collection AS C WHERE user_id=1
 
 # SELECT I.name, I.hash FROM item_in_collection AS C, items AS I WHERE C.collection_id=1 AND C.item_id=I.id ORDER BY I.name

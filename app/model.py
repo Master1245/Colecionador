@@ -73,11 +73,9 @@ class item_in_collection(db.Model, UserMixin):
     collection_id = db.Column(db.Integer, db.ForeignKey('colections.id'))
 
     def __init__(self, item_id, collection_id):
-        self.__item_id = item_id
-        self.__collection_id = collection_id
+        self.item_id = item_id
+        self.collection_id = collection_id
 
-    def __repr__(self):
-        return '<item_in_collection %r>' % self.__collection_id, " <item_id %r>", self.__item_id
 
 class User_Collection(db.Model, UserMixin):
     __tablename__ = 'user_collection'
@@ -86,8 +84,5 @@ class User_Collection(db.Model, UserMixin):
     collection_id = db.Column(db.Integer, db.ForeignKey('colections.id'))
 
     def __init__(self, user_id, collection_id):
-        self.__user_id = user_id
-        self.__collection_id = collection_id
-
-    def __repr__(self):
-        return '<user_collection %r>' % self.__collection_id, " <user_id %r>", self.__user_id
+        self.user_id = user_id
+        self.collection_id = collection_id
