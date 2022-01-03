@@ -5,9 +5,10 @@
     <title>Itens</title>
 </head>
 <body>
+    <h1>Itens</h1>
+    {% for i in img %}
+        <img src="{{ i }}" alt="">
+    {% endfor %}
     <a href="{{ url_for('logout') }}">Logout</a>
-    <div>
-        <h1> {{ </h1>
-    </div>
 </body>
 </html>

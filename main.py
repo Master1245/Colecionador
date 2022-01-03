@@ -83,7 +83,8 @@ def itens():
     img = []
     for iten in itens_bd:
         img.append(get_img(iten.hash))
-    return render_template('itens.html' , itens=img)
+    print(img)
+    return render_template('itens.html' , img=img)
   
 @app.route('/register_item' , methods=['GET','POST'])    
 @login_required

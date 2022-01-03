@@ -17,8 +17,6 @@ class User(db.Model, UserMixin):
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
-        print(generate_password_hash(password))
-        print(password)
         self.password = generate_password_hash(password)
 
     def verify_password(self, password):

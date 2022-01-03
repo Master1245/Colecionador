@@ -13,7 +13,7 @@ LOCATION = os.environ.get("region_name")
 def get_img(img_name):
     s3 = boto3.client('s3', aws_access_key_id=SECRET_KEY, aws_secret_access_key=ACESS_ID, region_name=LOCATION)
     response = s3.generate_presigned_url('get_object',Params={'Bucket': 'colecionador','Key': img_name + ".jpg"},ExpiresIn=3600)
-    print(response)
+    return response
 
 def upload_img(img_name, hash):
     s3 = boto3.client('s3', aws_access_key_id=SECRET_KEY, aws_secret_access_key=ACESS_ID, region_name=LOCATION)
