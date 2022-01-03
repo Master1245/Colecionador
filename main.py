@@ -49,13 +49,13 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
-        
-        if not user or user.verify_password(password):
-            return redirect(url_for('login')), "<h1>Senha Incorreta Ou Usuario não cadastrado</h1>"
-        
-        login_user(user)
-        return redirect(url_for("home"))
-
+        if not user:
+            return redirect(url_for('register'))
+        if user.verify_password(password):
+            login_user(user)
+            return redirect(url_for('home'))
+        else:
+            return redirect(url_for('login'))
     return render_template('login.html')
 
 @app.route('/logout' , methods=['GET','POST'])
