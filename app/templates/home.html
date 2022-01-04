@@ -16,9 +16,26 @@
         <br>
         <a href="{{ url_for('logout') }}">Sair</a>
     </div>
+    <br>
+    <div>
+        <h1>Tipos Cadastrados</h1>
+        {% for i in type %}
+            <p>Nome : {{ i.name }}</p>
+            <br>
+        {% endfor %}
+        <br>
+        <br>
+        <h1>Coleções Cadastradas</h1>
+        {% for i in collection %}
+            <p>Nome : {{ i.name }}</p>
+            <p>Descrição : {{ i.description }}</p>
+            <br>
+        {% endfor %}
+    </div>
 
 {% else %}
-    <div>
+    
+<div>
         <h1> Não esta logado </h1>
         <a href="{{ url_for('login') }}">Login</a>
         <br>

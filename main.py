@@ -1,7 +1,7 @@
+import collections
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
-from sqlalchemy import log
 from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
 from werkzeug.security import generate_password_hash
@@ -25,7 +25,15 @@ def make_chell_context():
 
 @app.route('/' , methods=['GET', 'POST'])
 def home():
-    return render_template('home.html')
+    collection_id = []
+    collections = []
+    user = current_user.id
+    collection = User_Collection.query.filter_by(user_id=user).all()
+    for i in collection:
+        collection_id.append(i.collection_id)
+    for i in collection_id:
+        collections.append(Colection.query.filter_by(id=i).first())
+    return render_template('home.html', type=Item_type.query.all(), collection=collections) 
 
 @app.route('/register' ,methods=['GET','POST'])
 def register():
@@ -79,9 +87,7 @@ def itens():
     p = User_Collection.query.filter_by(user_id=current_user.id).all()
     for itens in p:
         collections.append(itens.collection_id)
-    # SELECT I.name, I.hash 
-    # FROM item_in_collection AS C, items AS I 
-    # WHERE C.collection_id=1 AND C.item_id=I.id ORDER BY I.name
+    # SELECT I.name, I.hash FROM item_in_collection AS C, items AS I WHERE C.collection_id=1 AND C.item_id=I.id ORDER BY I.name
     itens_bd = item_in_collection.query.filter(item_in_collection.collection_id.in_(collections)).order_by(item_in_collection.item_id).all()
     itens = []
     for item in itens_bd:
@@ -90,7 +96,6 @@ def itens():
     img = []
     for iten in itens_bd:
         img.append(get_img(iten.hash))
-    print(img)
     return render_template('itens.html' , img=img)
   
 @app.route('/register_item' , methods=['GET','POST'])    
@@ -129,7 +134,6 @@ def register_item():
             else:
                 return render_template('register_item.html', message="Preencha todos os campos", collections=collection_name, type=Item_type.query.all())
     except Exception as e:
-        print(e)
         return render_template('register_item.html', message=e, collections=collection_name, type=Item_type.query.all())
     return render_template('register_item.html', collections=collection_name, type=Item_type.query.all())
     
@@ -173,4 +177,5 @@ def register_type():
         return render_template('register_type.html', message=e)
 
     return render_template('register_type.html', message="Favor preencher todos os campos")
+
 app.run(debug=True)

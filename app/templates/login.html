@@ -3,5 +3,9 @@
     <input type="password" name="password" placeholder="Insira uma senha">
     <input type="submit" value="Logar">
 </form>
-
-{{ message }}
+{% if message == 'Usuário não cadastrado' %}
+    {{ message }}
+    <a href="{{ url_for('register') }}">Registar</a>
+{% else %}
+    {{ message }}
+{% endif %}
