@@ -60,11 +60,11 @@ class Colection(db.Model, UserMixin):
     description = db.Column(db.Text, nullable=False)
 
     def __init__(self, name, description):
-        self.__name = name
-        self.__description = description
+        self.name = name
+        self.description = description
 
     def __repr__(self):
-        return '<Colection %r>' % self.__name
+        return '<Colection %r>' % self.name
 
 class item_in_collection(db.Model, UserMixin):
     __tablename__ = 'item_in_collection'
