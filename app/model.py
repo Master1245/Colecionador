@@ -48,10 +48,10 @@ class Item_type(db.Model, UserMixin):
     name = db.Column(db.String(64), nullable=False)
 
     def __init__(self, name):
-        self.__name = name
+        self.name = name
 
     def __repr__(self):
-        return '<Item_type %r>' % self.__name
+        return '<Item_type %r>' % self.name
 
 class Colection(db.Model, UserMixin):
     __tablename__ = 'colections'

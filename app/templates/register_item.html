@@ -3,9 +3,22 @@
     <br>
     <input type="text" placeholder="Insira uma descricao" name="description">
     <br>
-    <input type="type" placeholder="Insira uma tipo" name="item_type">
+    <select name="type">
+        {% for i in type %}
+            <option value={{ i }}>{{ i.name }}</option>
+        {% endfor %}
+    </select>
+    <br>
+    <select name="Colecao">
+        {% for i in collections %}
+            <option value={{ i }}>{{ i }}</option>
+        {% endfor %}
+    </select>
     <br>
     <input type="file" value="Arquivo" name="img">
     <br>
     <input type="submit" value="Enviar">
 </form>
+
+
+{{ message }}
