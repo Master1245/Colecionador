@@ -2,6 +2,7 @@
     <input type="email" name="email" placeholder="Insira um Email">
     <input type="password" name="password" placeholder="Insira uma senha">
     <input type="submit" value="Logar">
+    <a href="{{ url_for('forgotpassword') }}">Redefinir Senha</a>
 </form>
 {% if message == 'Usuário não cadastrado' %}
     {{ message }}

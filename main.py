@@ -25,16 +25,19 @@ def make_chell_context():
 
 @app.route('/' , methods=['GET', 'POST'])
 def home():
-    collection_id = []
-    collections = []
-    user = current_user.id
-    collection = User_Collection.query.filter_by(user_id=user).all()
-    for i in collection:
-        collection_id.append(i.collection_id)
-    for i in collection_id:
-        collections.append(Colection.query.filter_by(id=i).first())
-    return render_template('home.html', type=Item_type.query.all(), collection=collections) 
-
+    if current_user.is_authenticated:
+        collection_id = []
+        collections = []
+        user = current_user.id
+        collection = User_Collection.query.filter_by(user_id=user).all()
+        for i in collection:
+            collection_id.append(i.collection_id)
+        for i in collection_id:
+            collections.append(Colection.query.filter_by(id=i).first())
+        return render_template('home.html', type=Item_type.query.all(), collection=collections) 
+    else:
+        return render_template("login.html", message="Favor preencher todos os campos")
+        
 @app.route('/register' ,methods=['GET','POST'])
 def register():
     try:
@@ -177,5 +180,6 @@ def register_type():
         return render_template('register_type.html', message=e)
 
     return render_template('register_type.html', message="Favor preencher todos os campos")
+
 
 app.run(debug=True)
