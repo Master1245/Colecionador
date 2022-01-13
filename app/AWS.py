@@ -6,9 +6,14 @@ from werkzeug.security import generate_password_hash
 local = os.path.dirname(os.path.abspath(__file__))
 
 load_dotenv(find_dotenv())
-SECRET_KEY = os.environ.get("aws_access_key_id")
-ACESS_ID = os.environ.get("aws_secret_access_key")
-LOCATION = os.environ.get("region_name")
+# SECRET_KEY = os.environ.get("aws_access_key_id")
+# ACESS_ID = os.environ.get("aws_secret_access_key")
+# LOCATION = os.environ.get("region_name")
+
+SECRET_KEY = os.environ['aws_access_key_id']
+ACESS_ID = os.environ['aws_secret_access_key']
+LOCATION = os.environ['region_name']
+
 
 def get_img(img_name):
     s3 = boto3.client('s3', aws_access_key_id=SECRET_KEY, aws_secret_access_key=ACESS_ID, region_name=LOCATION)
