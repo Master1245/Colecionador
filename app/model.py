@@ -1,6 +1,10 @@
 from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+import smtplib, ssl
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 
 
 @login_manager.user_loader
@@ -13,17 +17,26 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(64), nullable=False)
     email = db.Column(db.String(64), unique=True, nullable=True)
     password = db.Column(db.String(256), nullable=False)
+    Token_reset = db.Column(db.String(256), nullable=True)
 
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
         self.password = generate_password_hash(password)
+        self.Token_reset = None
 
     def verify_password(self, password):
         return check_password_hash(self.password, password)
 
     def __repr__(self):
         return '<User %r>' % self.name
+
+    def SendMail(token, destinario):
+        message = 'Subject: {}\n\n"TOKEN :"{}'.format("Utilize o token para reset da senha ",token)
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=ssl.create_default_context()) as server:
+            server.login("colecionadorrrr@gmail.com", 'lnkmvovyvehewufa')
+            server.sendmail(from_addr='colecionadorrrr@gmail.com', to_addrs=destinario, msg=message)
+            server.quit()
 
 class Item(db.Model, UserMixin):
     __tablename__ = 'items'

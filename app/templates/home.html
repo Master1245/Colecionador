@@ -14,6 +14,9 @@
         <a href="{{ url_for('register_type') }}">Cadastrar tipo</a>
         <br>
         <br>
+        <a href="{{ url_for('change_password') }}">Trocar Password</a>
+        <br>
+        <br>
         <a href="{{ url_for('logout') }}">Sair</a>
     </div>
     <br>
@@ -42,3 +45,5 @@
     </div>
 
 {% endif %}
+
+{{ message }}

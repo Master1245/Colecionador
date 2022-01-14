@@ -4,7 +4,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
 from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash,check_password_hash
 from app.AWS import upload_img, get_img
 import os
 
@@ -68,6 +68,15 @@ def login():
             user = User.query.filter_by(email=email).first()
             if not user:
                 return render_template('login.html', message='Usuário não cadastrado')
+            if user.Token_reset != None:
+                if user.Token_reset == password:
+                    user.Token_reset = None
+                    user.password = generate_password_hash("Trocar123")
+                    db.session.commit()
+                    return render_template('login.html', message='Sua senha é Trocar123 <br> FAVOR TROCAR A SENHA APOS FAZER LOGIN NOVAMENTE')
+                else:
+                    return render_template('login.html', message='Token inválido ou email invalido')
+
             if user.verify_password(password):
                 login_user(user)
                 return redirect(url_for('home'))
@@ -181,6 +190,47 @@ def register_type():
 
     return render_template('register_type.html', message="Favor preencher todos os campos")
 
+@app.route("/forgotpassword" , methods=['GET','POST'])
+def forgot_password():
+    try:
+        if request.method == "POST":
+            email = request.form['email']
+            if email:
+                user = User.query.filter_by(email=email).first()
+                if user:
+                    token = generate_password_hash(user.email)
+                    user.Token_reset = token
+                    db.session.commit()
+                    User.SendMail(token,email)
+                else:
+                    return render_template('forgotpassword.html', message="Email não cadastrado")
+            else:
+                return render_template('forgotpassword.html', message="Preencha todos os campos")
+    except Exception as e:
+        return render_template('forgot_password.html', message=e)
+    return render_template('forgot_password.html')
+
+@app.route("/changepassword" , methods=['GET','POST'])
+def change_password():
+    try:
+        if request.method == "POST":
+            email = request.form['email']
+            senha_atual = request.form['password_atual']
+            senha_nova = request.form['password_nova']
+            if email and senha_atual and senha_nova:
+                user = User.query.filter_by(email=email).first()
+                if user:
+                    if check_password_hash(user.password, senha_atual):
+                        user.password = generate_password_hash(senha_nova)
+                        db.session.commit()
+                        return render_template('home.html', message="Senha alterada com sucesso")
+                    else:
+                        return render_template('change_password.html', message="Senha atual incorreta")
+                else:
+                    return render_template('change_password.html', message="Email não cadastrado")
+    except Exception as e:
+        render_template('change_password.html', message=e)
+    return render_template('change_password.html')
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=True)
