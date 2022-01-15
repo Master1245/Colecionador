@@ -1,12 +1,23 @@
 {% extends "template.html" %}
 
 {% block content %}
-<form action="" method="post"> 
-    <input type="text" name="name" placeholder="Insira um nome">
-    <input type="email" name="email" placeholder="Insira um Email">
-    <input type="password" name="password" placeholder="Insira uma senha">
-    <input type="submit" value="Cadastrar">
-</form>
 
-{{ message }}
+<div class="row darken padding_default rounded center-div pt-4 pb-4">
+    <h1> <i class="bi bi-house-door"></i> </h1>
+    <form action="" method="post"> 
+        <br class="clearboth">
+        <label for="name1"> Nome:</label>
+        <input id="name1" type="text" name="name" placeholder="Insira um nome">
+        <br class="clearboth mt-2 mb-1">
+        <label for="email1"> Email:&nbsp;</label>
+        <input id="email1" type="email" name="email" placeholder="Insira um Email">
+        <br class="clearboth  mt-2 mb-1">
+        <label for="password1"> Senha:</label>
+        <input id="password1" type="password" name="password" placeholder="Insira uma senha">
+        <br class="clearboth  mt-2 mb-4">
+        <input type="submit" value="Cadastrar" class="btn btn-light">
+    </form>
+    
+    <p class="text-danger mb-2 mt-2 fst-italic"> {{ message }} </p>
+</div>
 {% endblock %}

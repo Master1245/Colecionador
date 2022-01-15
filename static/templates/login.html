@@ -1,7 +1,7 @@
 {% extends "template.html" %}
 
 {% block head %}
-<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='./css/login.css') }}">
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='./css/templates/login.css') }}">
 {% endblock   %}
 
 {% block content %}
@@ -28,7 +28,7 @@
       {% if message == 'Usuário não cadastrado' %}
 
       <p class="fst-italic text-danger "> </p>{{ message }} </p>
-      <button class="btn btn-outline-light" href="{{ url_for('register') }}"> Registar aqui! </button>
+      <a href="{{ url_for('register') }}"><button class="btn btn-outline-light"> Registar aqui! </button></a>
       <br><br>
       {% else %}
           <p class="fst-italic text-danger "> {{ message }} </p>
