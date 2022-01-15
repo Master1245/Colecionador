@@ -16,27 +16,40 @@
     </div>
     <div class="col-10 ps-2">
         <div class="darken rounded row menu">        
-            <div class="col-md-3 col-sm-6">
-                <i class="bi bi-file-earmark"></i>
-                <p><a href="{{ url_for('itens') }}">Ver seus Items</a></p>
+            <div class="col-md-3 col-sm-6 p-3">
+                <a href="{{ url_for('itens') }}" class=" mh-100 mw-100">
+                    <button class="btn btn-outline-light  mh-100 mw-100">
+                        <i class="bi bi-file-earmark"></i>
+                        <p> Ver seus Items </p>
+                    </button>
+                </a>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <i class="bi bi-file-earmark-plus"></i>
-                <p><a href="{{ url_for('register_item') }}"> Cadastrar um novo Item</a></p>
+            <div class="col-md-3 col-sm-6 p-3">
+                <button class="btn btn-outline-light mh-100 mw-100" data-bs-toggle="modal" data-bs-target="#item_submit">
+                    <i class="bi bi-file-earmark-plus"></i>
+                    <!-- <p><a href="{{ url_for('register_item') }}"> Cadastrar um novo Item</a></p> -->
+                    <p> Cadastrar um novo Item</p>
+                </button>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <i class="bi bi-file-earmark-text"></i>
-                <p><a href="{{ url_for('register_collection') }}">Cadastrar uma Coleção</a></p>
+            <div class="col-md-3 col-sm-6 p-3">
+                <button class="btn btn-outline-light mh-100 mw-100" data-bs-toggle="modal" data-bs-target="#collection_submit">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <!-- <p><a href="{{ url_for('register_collection') }}">Cadastrar uma Coleção</a></p> -->
+                    <p> Cadastrar uma Coleção </p>
+                </button>
             </div>
-            <div class="col-md-3 col-sm-6">
-                <i class="bi bi-file-earmark-arrow-up"></i>
-                <p><a href="{{ url_for('register_type') }}">Cadastrar um novo tipo</a></p>
+            <div class="col-md-3 col-sm-6 p-3">
+                <button class="btn btn-outline-light mh-100 mw-100" data-bs-toggle="modal" data-bs-target="#type_submit">
+                    <i class="bi bi-file-earmark-arrow-up"></i>
+                    <!-- <p><a href="{{ url_for('register_type') }}">Cadastrar um novo tipo</a></p> -->
+                    <p> Cadastrar um novo tipo </p>
+                </button>
             </div>
         </div>
     </div>
 
 
-    <br>
+<!--     <br>
     <div>
         <h1>Tipos Cadastrados</h1>
         {% for i in type %}
@@ -51,7 +64,7 @@
             <p>Descrição : {{ i.description }}</p>
             <br>
         {% endfor %}
-    </div>
+    </div> -->
 </div>
 {% else %}
     
@@ -64,3 +77,7 @@
 {% endif %}
 {{ message }}
 {% endblock %}
+
+{% include "components/item_submit.html" %}
+{% include "components/collection_submit.html" %}
+{% include "components/type_submit.html" %}
