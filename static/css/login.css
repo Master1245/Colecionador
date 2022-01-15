@@ -19,13 +19,16 @@
     font-size: 18px;
     font-weight: 800;
     color: rgb(113, 210, 240);
-    position: fixed;
-    top: 34.2%; 
-    left: 46%;
+    position: relative;
+    top: -10%; 
+    left: 8%;
     font-weight: 700;
 }
 form label{
     text-align: left;
     font-style: italic;
     clear: both;
+}
+.text-danger{
+    font-size: 10px;
 }
