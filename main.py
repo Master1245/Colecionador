@@ -147,30 +147,7 @@ def register_item():
     except Exception as e:
         return render_template('register_item.html', message=e, collections=collection_name, type=Item_type.query.all())
     return render_template('register_item.html', collections=collection_name, type=Item_type.query.all())
-    
-
-@app.route('/register_collection' , methods=['GET','POST'])
-@login_required
-def register_collection():
-    try:
-        if request.method == "POST":
-            name = request.form['name']
-            description = request.form['description']
-            if name and description:
-                collection = Colection(name, description)
-                db.session.add(collection)
-                db.session.commit()
-                collection_id = Colection.query.filter_by(description=description).first().id
-                user_Collection = User_Collection(current_user.id, collection_id)
-                db.session.add(user_Collection)
-                db.session.commit()
-                return render_template("home.html")
-            else: 
-                return render_template('register_collection.html', message="Preencha todos os campos")
-    except Exception as e:
-        return render_template('register_collection.html', message=e)
-    return render_template('register_collection.html', message="Favor preencher todos os campos")
-    
+ 
 @app.route('/register_type' , methods=['GET','POST'])
 @login_required
 def register_type():
@@ -238,11 +215,11 @@ def get_collections():
     except Exception as e:
         return e
 
-@app.route("/post_collections", methods=['GET','POST'])
-def post_collections():
-    name = request.args.get('name', 0, type=str)
-    description = request.args.get('description', 0, type=str)
+@app.route("/post_collection", methods=['GET','POST'])
+def post_collection():
     try:
+        name = request.args.get('name', 0, type=str)
+        description = request.args.get('description', 0, type=str)
         if name and description:
             collection = Colection(name, description)
             db.session.add(collection)
@@ -251,13 +228,26 @@ def post_collections():
             user_Collection = User_Collection(current_user.id, collection_id)
             db.session.add(user_Collection)
             db.session.commit()
-            return "True"
+            return "tudo certo por aqui"
         else: 
-            return "False"
+            return "por favor preencha todos os campos"
     except Exception as e:
         return e
     
-
+@app.route("/post_item" , methods=['GET'])
+def post_item():
+    try:
+        if request.method == "POST":
+            name = request.form['name']
+            if name:
+                type = Item_type(name)
+                db.session.add(type)
+                db.session.commit()
+                return render_template("home.html")
+            else:
+                return render_template('register_type.html', message="Preencha todos os campos")
+    except Exception as e:
+        return e
 
 
 if __name__ == '__main__':

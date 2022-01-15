@@ -2,25 +2,7 @@
 
 {% block content %}
 <form action="" method="post" enctype="multipart/form-data">
-    <input type="text" placeholder="Insira um nome" name="name">
-    <br>
-    <input type="text" placeholder="Insira uma descricao" name="description">
-    <br>
-    <select name="type">
-        {% for i in type %}
-            <option value="{{ i }}">{{ i.name }}</option>
-        {% endfor %}
-    </select>
-    <br>
-    <select name="Colecao">
-        {% for i in collections %}
-            <option value={{ i }}>{{ i }}</option>
-        {% endfor %}
-    </select>
-    <br>
-    <input type="file" value="Arquivo" name="img">
-    <br>
-    <input type="submit" value="Enviar">
+ 
 </form>
 {{ message }}
 {% endblock %}

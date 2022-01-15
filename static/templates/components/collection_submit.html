@@ -8,9 +8,9 @@
                 <button type="button" class="btn text-white" data-bs-dismiss="modal"> <h3><i class="bi bi-x"></i></h3> </button>
             </div>
             <div class="modal-body p-3">
-                <input type="text" placeholder="Insira um nome" name="name">
+                <input type="text" placeholder="Insira um nome" name="name_collection">
                 <br>
-                <input type="text" placeholder="Insira uma descrição" name="description">
+                <input type="text" placeholder="Insira uma descrição" name="description_collection">
             </div>
             <div class="modal-footer">
                 <button id="submit_new_collection" type="button" class="btn btn-outline-light">Submeter</button>
@@ -22,9 +22,9 @@
 <script>
     $(function() {
         $('#submit_new_collection').click(function() {
-          $.getJSON( "{{ url_for('post_collections') }}", {
-            name: $('input[name="name"]').val(),
-            description: $('input[name="description"]').val()
+          $.getJSON( "{{ url_for('post_collection') }}", {
+            name: $('input[name="name_collection"]').val(),
+            description: $('input[name="description_collection"]').val()
           }).done(function(e) {
               alert( e );
           }).fail(function(e) {
