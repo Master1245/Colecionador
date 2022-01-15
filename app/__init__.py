@@ -9,9 +9,7 @@ load_dotenv(find_dotenv())
 DB_NUVEM = os.environ.get('DB_NUVEM')
 DB_LOCAL = os.environ.get('DB_LOCAL')
 
-app = Flask(__name__, template_folder='./templates')
-
-                                
+app = Flask(__name__, template_folder='../static/templates' , static_folder='../static')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_LOCAL
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['JAWSDB_MARIA_URL']
