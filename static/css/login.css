@@ -1,0 +1,31 @@
+.logo-mx{
+    font-size: 10px;
+}
+.logo-mx .bi{
+    font-size: 80px;
+}
+.logo-mx .tm{
+    font-size: 20px;
+    position: fixed;
+    top: 5%; 
+    left: 53%;
+    font-weight: 700;
+}
+.logo-mx .name{
+    font-size: 28px;
+    font-weight: 800;
+}
+.logo-mx .subtitle{
+    font-size: 18px;
+    font-weight: 800;
+    color: rgb(113, 210, 240);
+    position: fixed;
+    top: 34.2%; 
+    left: 46%;
+    font-weight: 700;
+}
+form label{
+    text-align: left;
+    font-style: italic;
+    clear: both;
+}

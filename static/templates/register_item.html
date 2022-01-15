@@ -1,3 +1,6 @@
+{% extends "template.html" %}
+
+{% block content %}
 <form action="" method="post" enctype="multipart/form-data">
     <input type="text" placeholder="Insira um nome" name="name">
     <br>
@@ -19,6 +22,5 @@
     <br>
     <input type="submit" value="Enviar">
 </form>
-
-
 {{ message }}
+{% endblock %}

@@ -1,3 +1,6 @@
+{% extends "template.html" %}
+
+{% block content %}
 <form action="" method="post"> 
     <input type="text" name="name" placeholder="Insira um nome">
     <input type="email" name="email" placeholder="Insira um Email">
@@ -6,3 +9,4 @@
 </form>
 
 {{ message }}
+{% endblock %}

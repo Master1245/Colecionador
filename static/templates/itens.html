@@ -1,16 +1,11 @@
+{% extends "template.html" %}
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <title>Itens</title>
-</head>
-<body>
-    <h1>Itens</h1>
-    {% for i in img %}
-        <img src="{{ i }}" alt="">
-    {% endfor %}
-    <a href="{{ url_for('logout') }}">Logout</a>
-    <br>
-    <a href="{{ url_for('home') }}">home</a>
-</body>
-</html>
+{% block content %}
+<h1>Itens</h1>
+{% for i in img %}
+    <img src="{{ i }}" alt="">
+{% endfor %}
+<a href="{{ url_for('logout') }}">Logout</a>
+<br>
+<a href="{{ url_for('home') }}">home</a>
+{% endblock %}
