@@ -1,21 +1,30 @@
 {% extends "template.html" %}
 
 {% block content %}
-<div class="row darken">
+<div class="row darken padding_default rounded center-div pt-4 pb-4">
+    <div class="logo-mx">
+        <i class="bi bi-trophy"></i>
+        <p class="tm border_all_gray"> TM </p>
+        <p class="name"> Colecionador.py </p>
+        <p class="subtitle border_all_gray"> Colecione todos! </p>
+    </div>
     <form action="" method="post"> 
         <input type="email" name="email" placeholder="Insira um Email">
+        <br class="mt-5 mb-1">
         <input type="password" name="password" placeholder="Insira uma senha">
+        <br class="mt-2 mb-2">
         <input type="submit" value="Logar">
-        <br>
-        <br>
+        <hr class="mt-4 mb-4">
         <a href="{{ url_for('forgot_password') }}">Redefinir Senha</a>
     </form>
-    <br>
     {% if message == 'Usuário não cadastrado' %}
-        {{ message }}
-        <a href="{{ url_for('register') }}">Registar</a>
+
+    {{ message }}
+    <br>
+    <a href="{{ url_for('register') }}">Registar</a>
+    <br>
     {% else %}
-        {{ message }}
+        <p class="fst-italic"> {{ message }} </p>
     {% endif %}
 </div>
 {% endblock %}
