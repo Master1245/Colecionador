@@ -230,6 +230,36 @@ def change_password():
     except Exception as e:
         render_template('change_password.html', message=e)
     return render_template('change_password.html')
+
+@app.route("/get_collections" , methods=['GET'])
+def get_collections():
+    try:
+        return "teste"
+    except Exception as e:
+        return e
+
+@app.route("/post_collections", methods=['GET','POST'])
+def post_collections():
+    name = request.args.get('name', 0, type=str)
+    description = request.args.get('description', 0, type=str)
+    try:
+        if name and description:
+            collection = Colection(name, description)
+            db.session.add(collection)
+            db.session.commit()
+            collection_id = Colection.query.filter_by(description=description).first().id
+            user_Collection = User_Collection(current_user.id, collection_id)
+            db.session.add(user_Collection)
+            db.session.commit()
+            return "True"
+        else: 
+            return "False"
+    except Exception as e:
+        return e
+    
+
+
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

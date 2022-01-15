@@ -7,12 +7,29 @@
                 <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-file-earmark-text"></i> Criar uma nova colecção no sistema.</h5>
                 <button type="button" class="btn text-white" data-bs-dismiss="modal"> <h3><i class="bi bi-x"></i></h3> </button>
             </div>
-            <div class="modal-body">
-                ...
+            <div class="modal-body p-3">
+                <input type="text" placeholder="Insira um nome" name="name">
+                <br>
+                <input type="text" placeholder="Insira uma descrição" name="description">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-light">Submeter</button>
+                <button id="submit_new_collection" type="button" class="btn btn-outline-light">Submeter</button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(function() {
+        $('#submit_new_collection').click(function() {
+          $.getJSON( "{{ url_for('post_collections') }}", {
+            name: $('input[name="name"]').val(),
+            description: $('input[name="description"]').val()
+          }).done(function(e) {
+              alert( e );
+          }).fail(function(e) {
+              console.log( e.responseText );
+          });
+        });
+      });
+</script>
