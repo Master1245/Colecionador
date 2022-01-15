@@ -1,42 +1,41 @@
-{% extends "template.html" %}
+{% extends "template_home.html" %}
 {% block head %}
 <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='./css/templates/home.css') }}">
 {% endblock %}
 
 {% block content %}
 {% if current_user.is_authenticated %}
-<div class="row padding_default pt-4 pb-4">
+<div class="row pt-2 pb-2 container">
     <div class="col-2 darken rounded">
+        <p class="user_name"><i class="bi bi-person"></i> @{{ current_user.name }} </p>
+        <p class="set_active fst-italic mh-100 d-inline-block">Conectado!</p>
         <br>
-        <div class="row">
-            <div class="col-4" style="text-align: right;">
-                <h2><i class="bi bi-person"></i></h2>
+        <div class="change_password">
+            <p><a href="{{ url_for('change_password') }}"><i class="bi bi-gear-fill"></i> - Trocar senha?</a></p>
+        </div>
+    </div>
+    <div class="col-10 ps-2">
+        <div class="darken rounded row menu">        
+            <div class="col-md-3 col-sm-6">
+                <i class="bi bi-file-earmark"></i>
+                <p><a href="{{ url_for('itens') }}">Ver seus Items</a></p>
             </div>
-            <div class="col-8" style="text-align: left;">  
-                <p id="user_name">@{{ current_user.name }} </p>
+            <div class="col-md-3 col-sm-6">
+                <i class="bi bi-file-earmark-plus"></i>
+                <p><a href="{{ url_for('register_item') }}"> Cadastrar um novo Item</a></p>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="bi bi-file-earmark-text"></i>
+                <p><a href="{{ url_for('register_collection') }}">Cadastrar uma Coleção</a></p>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <i class="bi bi-file-earmark-arrow-up"></i>
+                <p><a href="{{ url_for('register_type') }}">Cadastrar um novo tipo</a></p>
             </div>
         </div>
-        <p>Login on</p>
     </div>
-    <div class="col-1"></div>
-    <div class="col-9 darken rounded">
-        <a href="{{ url_for('itens') }}">ver itens Item</a>
-        <br>
-        <br>
-        <a href="{{ url_for('register_item') }}">Cadastrar Item</a>
-        <br>
-        <br>
-        <a href="{{ url_for('register_collection') }}">Cadastrar Coleção</a>
-        <br>
-        <br>
-        <a href="{{ url_for('register_type') }}">Cadastrar tipo</a>
-        <br>
-        <br>
-        <a href="{{ url_for('change_password') }}">Trocar Password</a>
-        <br>
-        <br>
-        <a href="{{ url_for('logout') }}">Sair</a>
-    </div>
+
+
     <br>
     <div>
         <h1>Tipos Cadastrados</h1>
@@ -65,5 +64,3 @@
 {% endif %}
 {{ message }}
 {% endblock %}
-
-{% include 'components/footer.html' %}

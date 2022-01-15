@@ -2,19 +2,23 @@
 <html lang="pt-BR">
     <head>
         <link rel="icon" type="ico/svg" href="{{ url_for('static', filename='./resource/trophy.svg') }}" />
-        <title>Sign Up</title>
+        <title>Colecionador</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='./css/bootstrap.min.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
         <link rel="stylesheet" href="{{ url_for('static', filename='./css/style.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='./css/components/footer.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='./css/components/navbar.css') }}">
         {% block head %}
         {% endblock %}
     </head>
     <body>
-        
         <div class="container">
-        {% block content %}
-        {% endblock %}
+            {% include 'components/navbar.html'%} 
+            {% block content %}
+            {% endblock %}
+            {% include 'components/footer.html'%} 
         </div>
+
         <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     

@@ -34,8 +34,18 @@ a:link {
     color: rgb(113, 210, 240);
     text-decoration: none;
 }
+a:visited {
+    color: rgb(113, 210, 240);
+    text-decoration: none;
+}
+.set_active{
+    color: rgb(113, 210, 240);
+}
 body{
     background-color: black;
     color: aliceblue;
     text-align: center;
+}
+.m0{
+    margin: 0 !important;
 }

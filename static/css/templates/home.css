@@ -1,0 +1,19 @@
+.row {
+    --bs-gutter-x: 0 !important;
+}
+.user_name{
+    margin-top: 15px;
+    font-size: 30px;
+    margin-bottom: -10px;
+}
+.change_password{
+    position: relative;
+    bottom: 0;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
+}
+.menu i{
+    font-size: 60px;
+    font-weight: 700;
+}
