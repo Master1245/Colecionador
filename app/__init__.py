@@ -6,13 +6,11 @@ from dotenv import load_dotenv, find_dotenv
 import os 
 
 load_dotenv(find_dotenv())
-DB_NUVEM = os.environ.get('DB_NUVEM')
-DB_LOCAL = os.environ.get('DB_LOCAL')
+BD_NUVEM = os.environ.get('BD_NUVEM')
 
 app = Flask(__name__, template_folder='../static/templates' , static_folder='../static')
 
-app.config['SQLALCHEMY_DATABASE_URI'] = DB_LOCAL
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['JAWSDB_MARIA_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = BD_NUVEM
 app.config['SECRET_KEY'] = 'secret'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=10)
