@@ -1,0 +1,11 @@
+.darken{
+    background-color: #171717;
+}
+.center-div{
+    margin: 0 auto;
+    width: 100%;
+}
+body{
+    background-color: black;
+    color: aliceblue;
+}
