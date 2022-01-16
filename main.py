@@ -234,7 +234,7 @@ def post_collection():
     except Exception as e:
         return e
     
-@app.route("/post_item" , methods=['GET'])
+@app.route("/post_item" , methods=['GET','POST'])
 def post_item():
     try:
         if request.method == "POST":
