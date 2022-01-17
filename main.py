@@ -211,8 +211,18 @@ def change_password():
 @app.route("/get_collections" , methods=['GET'])
 def get_collections():
     try:
-        return "teste"
+        collection_id = []
+        collections = []
+        user = current_user.id
+        collection = User_Collection.query.filter_by(user_id=user).all()
+        for i in collection:
+            print(i)
+            collection_id.append(i.collection_id)
+        for i in collection_id:
+            collections.append(Colection.query.filter_by(id=i).first().name)
+        return collections
     except Exception as e:
+        print(e)
         return e
 
 @app.route("/post_collection", methods=['GET','POST'])
@@ -248,7 +258,6 @@ def post_item():
                 return render_template('register_type.html', message="Preencha todos os campos")
     except Exception as e:
         return e
-
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
