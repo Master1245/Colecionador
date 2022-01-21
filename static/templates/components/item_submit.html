@@ -38,9 +38,9 @@
     var jqxhr = $.get( "{{ url_for('get_collections') }}", function() {
     })
     .done(function(e) {
-        alert( e );
+        console.log(e)
     })
-    .fail(function() {
+    .fail(function(e) {
         alert( "error" );
     })
 </script>

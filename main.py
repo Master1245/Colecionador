@@ -5,6 +5,7 @@ from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
 from werkzeug.security import generate_password_hash,check_password_hash
 from app.AWS import upload_img, get_img
+from flask import jsonify
 import os
 
 Migrate(app, db)
@@ -220,7 +221,7 @@ def get_collections():
             collection_id.append(i.collection_id)
         for i in collection_id:
             collections.append(Colection.query.filter_by(id=i).first().name)
-        return collections
+        return jsonify(collections)
     except Exception as e:
         print(e)
         return e
@@ -238,11 +239,11 @@ def post_collection():
             user_Collection = User_Collection(current_user.id, collection_id)
             db.session.add(user_Collection)
             db.session.commit()
-            return "tudo certo por aqui"
+            return "201"
         else: 
-            return "por favor preencha todos os campos"
+            return "400"
     except Exception as e:
-        return e
+        return e, "501"
     
 @app.route("/post_item" , methods=['GET','POST'])
 def post_item():

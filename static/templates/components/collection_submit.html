@@ -12,24 +12,53 @@
                 <br>
                 <input type="text" placeholder="Insira uma descrição" name="description_collection">
             </div>
+            <p class="fst-italic text-danger" id="collection-danger"></p>
             <div class="modal-footer">
-                <button id="submit_new_collection" type="button" class="btn btn-outline-light">Submeter</button>
+                <button id="submit_new_collection" type="button" class="btn btn-outline-light">
+                    <p> Submeter </p>
+                    <div class="spinner-border text-light loading" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    $('#submit_new_collection > div').hide();
+    
+    $('#collection_submit').on('hide.bs.modal', function (event) {
+        $('#submit_new_collection > div').hide();
+        alert('1')
+    });
+
     $(function() {
         $('#submit_new_collection').click(function() {
-          $.getJSON( "{{ url_for('post_collection') }}", {
-            name: $('input[name="name_collection"]').val(),
-            description: $('input[name="description_collection"]').val()
-          }).done(function(e) {
-              alert( e );
-          }).fail(function(e) {
-              console.log( e.responseText );
-          });
+            name_text = $('input[name="name_collection"]').val();
+            description_text = $('input[name="description_collection"]').val();
+            if(name_text != '' && description_text != ''){
+                $('#submit_new_collection > p').toggle();
+                $('#submit_new_collection > div').toggle();
+        
+                $.getJSON( "{{ url_for('post_collection') }}", {
+                    name: name_text,
+                    description: description_text
+                }).done(function(e) {
+                    $('input[name="name_collection"]').attr('placeholder', name_text);
+                    $('input[name="description_collection"').attr('placeholder', description_text);
+                    
+                    $('input[name="name_collection"]').val('');
+                    $('input[name="description_collection"').val('');
+                }).fail(function(e) {
+                    if(e.responseText = 400){
+                        $('#collection-danger').text( "*favor preencher todos os campos*")
+                    }
+                    console.log( e.responseText );
+                });
+            }else{
+                $('#collection-danger').text( "*favor preencher todos os campos*" )
+            }
         });
-      });
+    });
 </script>
