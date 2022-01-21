@@ -217,7 +217,6 @@ def get_collections():
         user = current_user.id
         collection = User_Collection.query.filter_by(user_id=user).all()
         for i in collection:
-            print(i)
             collection_id.append(i.collection_id)
         for i in collection_id:
             collections.append(Colection.query.filter_by(id=i).first().name)
