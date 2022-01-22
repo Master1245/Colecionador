@@ -220,7 +220,7 @@ def get_collections():
             collection_id.append(i.collection_id)
         for i in collection_id:
             collections.append(Colection.query.filter_by(id=i).first())
-        return "".join(str(i) for i in collection_id)
+        return "".join(str(i) for i in collections)
     except Exception as e:
         print(e)
         return e
