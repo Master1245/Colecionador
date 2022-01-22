@@ -219,10 +219,12 @@ def get_collections():
             collection_id.append(i.collection_id)
         for i in collection_id:
             collections.append(Colection.query.filter_by(id=i).all())
-        for itens in collections:
-            p[itens[0].name] = []
-        print(p)
-        return p
+        result_collections = []
+        for i in collections:
+            res = {'id':i[0].id, 'name':i[0].name, 'description':i[0].description}
+            result_collections.append(res)
+        print(result_collections)
+        return jsonify(result_collections)
         # return "---".join(str(i.name) for i in collections)
     except Exception as e:
         # print(e)
