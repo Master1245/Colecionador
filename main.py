@@ -1,3 +1,4 @@
+from winreg import REG_OPTION_RESERVED
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
@@ -5,6 +6,7 @@ from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
 from werkzeug.security import generate_password_hash,check_password_hash
 from app.AWS import upload_img, get_img
+import json
 from flask import jsonify
 import os
 
@@ -34,7 +36,7 @@ def home():
             collection_id.append(i.collection_id)
         for i in collection_id:
             collections.append(Colection.query.filter_by(id=i).first())
-        return render_template('home.html', type=Item_type.query.all(), collection=collections) 
+        return render_template('home.html', types=Item_type.query.all(), collections=collections) 
     else:
         return redirect(url_for('login', message="*Favor preencher todos os campos*"))
         
@@ -96,8 +98,8 @@ def logout():
 def itens():
     collections = []
     # SELECT C.collection_id FROM user_collection AS C WHERE user_id=1
-    p = User_Collection.query.filter_by(user_id=current_user.id).all()
-    for itens in p:
+    users = User_Collection.query.filter_by(user_id=current_user.id).all()
+    for itens in users:
         collections.append(itens.collection_id)
     # SELECT I.name, I.hash FROM item_in_collection AS C, items AS I WHERE C.collection_id=1 AND C.item_id=I.id ORDER BY I.name
     itens_bd = item_in_collection.query.filter(item_in_collection.collection_id.in_(collections)).order_by(item_in_collection.item_id).all()
@@ -113,10 +115,6 @@ def itens():
 @app.route('/register_item' , methods=['GET','POST'])    
 @login_required
 def register_item():
-    collection_name = []
-    collections = User_Collection.query.filter_by(user_id=User.query.filter_by(id=current_user.id).first().id).all()
-    for iten in collections:
-        collection_name.append(Colection.query.filter_by(id=iten.collection_id).first().name)
     try:
         if request.method == 'POST':
             name = request.form['name']
@@ -144,10 +142,10 @@ def register_item():
                 upload_img("img.jpg",hash)
                 return redirect(url_for('itens'))
             else:
-                return render_template('register_item.html', message="Preencha todos os campos", collections=collection_name, type=Item_type.query.all())
+                return render_template('register_item.html', message="Preencha todos os campos", collections=get_collections(), types=get_types())
     except Exception as e:
-        return render_template('register_item.html', message=e, collections=collection_name, type=Item_type.query.all())
-    return render_template('register_item.html', collections=collection_name, type=Item_type.query.all())
+        return render_template('register_item.html', message=e, collections=get_collections(), types=get_types())
+    return render_template('register_item.html', collections="aaaa", types=get_types())
  
 @app.route('/register_type' , methods=['GET','POST'])
 @login_required
@@ -214,15 +212,31 @@ def get_collections():
     try:
         collection_id = []
         collections = []
+        p = {}
         user = current_user.id
         collection = User_Collection.query.filter_by(user_id=user).all()
         for i in collection:
             collection_id.append(i.collection_id)
         for i in collection_id:
-            collections.append(Colection.query.filter_by(id=i).first())
-        return "".join(str(i) for i in collections)
+            collections.append(Colection.query.filter_by(id=i).all())
+        for itens in collections:
+            p[itens[0].name] = []
+        print(p)
+        return p
+        # return "---".join(str(i.name) for i in collections)
     except Exception as e:
-        print(e)
+        # print(e)
+        return e
+
+@app.route("/get_types" , methods=['GET'])
+def get_types():
+    try:
+        types = []
+        for i in Item_type.query.all():
+            types.append(i)
+        return types
+    except Exception as e:
+        # print(e)
         return e
 
 @app.route("/post_collection", methods=['GET','POST'])

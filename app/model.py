@@ -72,9 +72,6 @@ class Colection(db.Model, UserMixin):
         self.name = name
         self.description = description
 
-    def __repr__(self):
-        return '<Colection %r>' % self.name
-
 class item_in_collection(db.Model, UserMixin):
     __tablename__ = 'item_in_collection'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

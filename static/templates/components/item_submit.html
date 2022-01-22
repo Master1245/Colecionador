@@ -13,14 +13,14 @@
                 <input type="text" placeholder="Insira uma descricao" name="description_item">
                 <br>
                 <select name="type_select">
-                    {% for i in type %}
+                    {% for i in types %}
                         <option value="{{ i }}">{{ i.name }}</option>
                     {% endfor %}
                 </select>
                 <br>
                 <select name="colecao_select">
                     {% for i in collections %}
-                        <option value={{ i }}>{{ i }}</option>
+                        <option value="{{ i }}">{{ i.name }}</option>
                     {% endfor %}
                 </select>
                 <br>
@@ -38,9 +38,22 @@
     var jqxhr = $.get( "{{ url_for('get_collections') }}", function() {
     })
     .done(function(e) {
+        console.log(jqxhr.responseText);
+
         console.log(e);
     })
     .fail(function(e) {
-        alert( "error" );
+        console.log(e);
+        console.log(jqxhr.responseText);
+        alert( "error collection" );
     })
+
+    // var jqxhr2 = $.get( "{{ url_for('get_types') }}", function() {
+    // })
+    // .done(function(e) {
+    //     console.log(e);
+    // })
+    // .fail(function(e) {
+    //     alert( "error type" );
+    // })
 </script>
