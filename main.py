@@ -219,8 +219,8 @@ def get_collections():
         for i in collection:
             collection_id.append(i.collection_id)
         for i in collection_id:
-            collections.append(Colection.query.filter_by(id=i).first().name)
-        return jsonify(collections)
+            collections.append(Colection.query.filter_by(id=i).first())
+        return collections
     except Exception as e:
         print(e)
         return e

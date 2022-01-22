@@ -27,10 +27,10 @@
 
 <script>
     $('#submit_new_collection > div').hide();
-    
+
     $('#collection_submit').on('hide.bs.modal', function (event) {
-        $('#submit_new_collection > div').hide();
-        alert('1')
+                        $('#submit_new_collection > p').toggle();
+                $('#submit_new_collection > div').toggle();
     });
 
     $(function() {
@@ -51,7 +51,7 @@
                     $('input[name="name_collection"]').val('');
                     $('input[name="description_collection"').val('');
                 }).fail(function(e) {
-                    if(e.responseText = 400){
+                    if(e.responseText = "400"){
                         $('#collection-danger').text( "*favor preencher todos os campos*")
                     }
                     console.log( e.responseText );
