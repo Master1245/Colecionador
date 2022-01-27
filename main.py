@@ -38,7 +38,7 @@ def home():
             collections.append(Colection.query.filter_by(id=i).first())
         return render_template('home.html', types=Item_type.query.all(), collections=collections) 
     else:
-        return redirect(url_for('login', message="*Favor preencher todos os campos*"))
+        return redirect(url_for('login'))
         
 @app.route('/register' ,methods=['GET','POST'])
 def register():

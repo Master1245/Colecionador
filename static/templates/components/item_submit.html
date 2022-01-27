@@ -35,12 +35,12 @@
     </div>
 </div>
 <script> 
+    response_ajax = []
     var jqxhr = $.get( "{{ url_for('get_collections') }}", function() {
     })
     .done(function(e) {
-        console.log(jqxhr.responseText);
-
         console.log(e);
+        response_ajax = e
     })
     .fail(function(e) {
         console.log(e);
