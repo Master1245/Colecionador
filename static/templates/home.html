@@ -4,7 +4,6 @@
 {% endblock %}
 
 {% block content %}
-{% if current_user.is_authenticated %}
 <div class="row pt-2 pb-2 container">
     <div class="col-2 darken rounded">
         <p class="user_name"><i class="bi bi-person"></i> @{{ current_user.name }} </p>
@@ -17,7 +16,7 @@
     <div class="col-10 ps-2">
         <div class="darken rounded row menu">        
             <div class="col-md-3 col-sm-6 p-3">
-                <a href="{{ url_for('itens') }}" class=" mh-100 mw-100">
+                <a href="{{ url_for('inventory') }}" class=" mh-100 mw-100">
                     <button class="btn btn-outline-light  mh-100 mw-100">
                         <i class="bi bi-file-earmark"></i>
                         <p> Ver seus Items </p>
@@ -63,15 +62,7 @@
         {% endfor %}
     </div>
 </div>
-{% else %}
-    
-    <div>
-        <h1> Não esta logado </h1>
-        <a href="{{ url_for('login') }}">Login</a>
-        <br>
-    </div>
 
-{% endif %}
 {{ message }}
 {% endblock %}
 {% block script %}

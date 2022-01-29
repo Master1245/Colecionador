@@ -8,6 +8,10 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='./css/style.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='./css/components/footer.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='./css/components/navbar.css') }}">
+        {% if not current_user.is_authenticated %}
+            <meta http-equiv="refresh" content="2"; URL="{{ url_for('login') }}">
+        {% endif %}
+
         {% block head %}
         {% endblock %}
     </head>

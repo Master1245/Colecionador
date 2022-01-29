@@ -34,26 +34,3 @@
         </div>
     </div>
 </div>
-<script> 
-    response_ajax = []
-    var jqxhr = $.get( "{{ url_for('get_collections') }}", function() {
-    })
-    .done(function(e) {
-        console.log(e);
-        response_ajax = e
-    })
-    .fail(function(e) {
-        console.log(e);
-        console.log(jqxhr.responseText);
-        alert( "error collection" );
-    })
-
-    // var jqxhr2 = $.get( "{{ url_for('get_types') }}", function() {
-    // })
-    // .done(function(e) {
-    //     console.log(e);
-    // })
-    // .fail(function(e) {
-    //     alert( "error type" );
-    // })
-</script>

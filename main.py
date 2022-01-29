@@ -2,6 +2,7 @@ from winreg import REG_OPTION_RESERVED
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
+from markupsafe import re
 from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
 from werkzeug.security import generate_password_hash,check_password_hash
@@ -212,7 +213,6 @@ def get_collections():
     try:
         collection_id = []
         collections = []
-        p = {}
         user = current_user.id
         collection = User_Collection.query.filter_by(user_id=user).all()
         for i in collection:
@@ -221,9 +221,8 @@ def get_collections():
             collections.append(Colection.query.filter_by(id=i).all())
         result_collections = []
         for i in collections:
-            res = {'id':i[0].id, 'name':i[0].name, 'description':i[0].description}
+            res = {'description':i[0].description, 'name':i[0].name, 'id':i[0].id}
             result_collections.append(res)
-        print(result_collections)
         return jsonify(result_collections)
         # return "---".join(str(i.name) for i in collections)
     except Exception as e:
@@ -235,8 +234,9 @@ def get_types():
     try:
         types = []
         for i in Item_type.query.all():
-            types.append(i)
-        return types
+            result = {'name': i.name, 'id': i.id}
+            types.append(result)
+        return jsonify(types)
     except Exception as e:
         # print(e)
         return e
@@ -258,9 +258,9 @@ def post_collection():
         else: 
             return "400"
     except Exception as e:
-        return e, "501"
+        return e
     
-@app.route("/post_item" , methods=['GET','POST'])
+""" @app.route("/post_item" , methods=['GET','POST'])
 def post_item():
     try:
         if request.method == "POST":
@@ -272,6 +272,26 @@ def post_item():
                 return render_template("home.html")
             else:
                 return render_template('register_type.html', message="Preencha todos os campos")
+    except Exception as e:
+        return e
+ """
+@app.route("/get_item" , methods=['GET','POST'])
+def get_item():
+    try:
+        from_id = request.args.get('collection_id', 0, type=int)
+        if from_id:
+            # get items corno by from_id is de id da collection ffelha da put
+            items = [{'nama':'teste', 'id':'1'}]
+            return jsonify(items)
+        else:
+            return "400"
+    except Exception as e:
+        return e
+
+@app.route("/inventory" , methods=['GET','POST'])
+def inventory():
+    try:
+        return render_template('inventory.html')
     except Exception as e:
         return e
 
