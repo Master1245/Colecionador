@@ -275,14 +275,17 @@ def post_item():
     except Exception as e:
         return e
  """
-@app.route("/get_item" , methods=['GET','POST'])
-def get_item():
+@app.route("/get_itens" , methods=['GET','POST'])
+def get_itens():
     try:
         from_id = request.args.get('collection_id', 0, type=int)
         if from_id:
-            # get items corno by from_id is de id da collection ffelha da put
-            items = [{'nama':'teste', 'id':'1'}]
-            return jsonify(items)
+            """itens_bd = item_in_collection.query.filter(item_in_collection.collection_id(from_id)).order_by(item_in_collection.item_id).all()
+            list_itens = []
+            for i in itens_bd:
+                list_itens.append({'id':i.item_id, 'name':i.item.name, 'description':i.item.description, 'type':i.item.type_id, 'collection':i.collection_id, 'hash':i.item.hash})
+            return jsonify(itens) """
+            return jsonify({'id': '1', 'name': 'pikachu', 'description': 'isaisasa', 'type': '1', 'collection': '1', 'hash': '1'})
         else:
             return "400"
     except Exception as e:
