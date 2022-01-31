@@ -1,0 +1,62 @@
+
+<!-- Modal -->
+<div class="modal fade" id="type_submit" tabindex="-1" aria-labelledby="type_submit" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content darken">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-file-earmark-arrow-up"></i> Criar um novo tipo no sistema.</h5>
+                <button type="button" class="btn text-white" data-bs-dismiss="modal"> <h3><i class="bi bi-x"></i></h3> </button>
+            </div>
+            <div class="modal-body">
+                <span>Nome: </span>
+                <input type="text" placeholder="Insira um nome" name="name" id="type_name_input">
+                <br>
+            </div>
+            <p class="fst-italic text-danger" id="collection-danger"></p>
+            <div class="modal-footer">
+                <button id="new_type_submit" type="button" class="btn btn-outline-light">
+                    <p class="align-middle m-0"> Submeter </p>
+                    <div class="spinner-border text-light loading" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block script %}
+<script>
+    $('#new_type_submit > div').hide();
+
+function toggleInputs(){
+    $('#new_type_submit > p').toggle();
+    $('#new_type_submit > div').toggle();
+}
+
+$(function() {
+    $('#new_type_submit').click(function() {
+        name_text = $('#type_name_input').val();
+        if(name_text != ''){
+            toggleInputs()
+    
+            $.getJSON( "{{ url_for('post_type') }}", {
+                name: name_text
+            }).done(function(e) {
+                $('#type_name_input').attr('placeholder', name_text);
+                
+                $('type_name_input').val('');
+                toggleInputs()
+            }).fail(function(e) {
+                if(e.responseText = "400"){
+                    $('#collection-danger').text( "*favor preencher todos os campos*")
+                }
+                console.log( e.responseText );
+            });
+        }else{
+            $('#collection-danger').text( "*favor preencher todos os campos*" )
+        }
+    });
+});
+</script>
+{% endblock %}

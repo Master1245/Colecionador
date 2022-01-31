@@ -8,7 +8,7 @@ import os
 load_dotenv(find_dotenv())
 BD_NUVEM = os.environ.get('BD_NUVEM')
 
-app = Flask(__name__, template_folder='../static/templates' , static_folder='../static')
+app = Flask(__name__, template_folder='../static/src' , static_folder='../static')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = BD_NUVEM
 app.config['SECRET_KEY'] = 'secret'

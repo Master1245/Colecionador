@@ -1,4 +1,4 @@
-{% extends "template.html" %}
+{% extends "templates/template.html" %}
 
 {% block head %}
 <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='./css/templates/login.css') }}">
@@ -36,12 +36,4 @@
     </div>
     
 </div>
-{% endblock %}
-  
-{% block script %}
-<script>
-  $(document).on("pageinit",function(){
-    alert("pageinit event fired!")
-  });
-</script>
 {% endblock %}

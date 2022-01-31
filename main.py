@@ -2,12 +2,10 @@ from winreg import REG_OPTION_RESERVED
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
-from markupsafe import re
 from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
 from werkzeug.security import generate_password_hash,check_password_hash
 from app.AWS import upload_img, get_img
-import json
 from flask import jsonify
 import os
 
@@ -53,14 +51,14 @@ def register():
                 db.session.add(user)
                 db.session.commit()
             else: 
-                return render_template('register.html', message="Preencha todos os campos")
+                return render_template('user/register.html', message="Preencha todos os campos")
             return redirect(url_for('login'))
     except Exception as e:
         if e.__class__.__name__ == 'IntegrityError':
-            return render_template('register.html', message='Email já cadastrado')
+            return render_template('user/register.html', message='Email já cadastrado')
         else:
-            return render_template('register.html', message='Erro ao cadastrar usuário')
-    return render_template('register.html')
+            return render_template('user/register.html', message='Erro ao cadastrar usuário')
+    return render_template('user/register.html')
 
 @app.route('/login', methods=['GET','POST'])
 def login():
@@ -94,7 +92,7 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/itens/' , methods=['GET','POST'])
+""" @app.route('/itens/' , methods=['GET','POST'])
 @login_required
 def itens():
     collections = []
@@ -111,61 +109,8 @@ def itens():
     img = []
     for iten in itens_bd:
         img.append(get_img(iten.hash))
-    return render_template('itens.html' , img=img)
+    return render_template('itens.html' , img=img) """
   
-@app.route('/register_item' , methods=['GET','POST'])    
-@login_required
-def register_item():
-    try:
-        if request.method == 'POST':
-            name = request.form['name']
-            description = request.form['description']
-            item_type = request.form['type']
-            collection = request.form['Colecao']
-            img = request.files['img']
-            hash = generate_password_hash(name)
-            remove = ["<", ">", "Item_type ", "'"]
-            for i in remove:
-                item_type = item_type.replace(i, "")
-            type = Item_type.query.filter_by(name=item_type).first().id
-            colecao = Colection.query.filter_by(name=collection).first().id
-            if name and description and item_type and img:
-                item = Item(name, description, type, hash)
-                db.session.add(item)
-                db.session.commit()
-                item = Item.query.filter_by(hash=hash).first().id
-                collection = item_in_collection(item, colecao)
-                db.session.add(collection)
-                db.session.commit()
-                basepath = os.path.dirname(__file__)
-                upload_path = os.path.join(basepath+ "/CARDS/", '',"img.jpg")
-                img.save(upload_path)
-                upload_img("img.jpg",hash)
-                return redirect(url_for('itens'))
-            else:
-                return render_template('register_item.html', message="Preencha todos os campos", collections=get_collections(), types=get_types())
-    except Exception as e:
-        return render_template('register_item.html', message=e, collections=get_collections(), types=get_types())
-    return render_template('register_item.html', collections="aaaa", types=get_types())
- 
-@app.route('/register_type' , methods=['GET','POST'])
-@login_required
-def register_type():
-    try:
-        if request.method == "POST":
-            name = request.form['name']
-            if name:
-                type = Item_type(name)
-                db.session.add(type)
-                db.session.commit()
-                return render_template("home.html")
-            else:
-                return render_template('register_type.html', message="Preencha todos os campos")
-    except Exception as e:
-        return render_template('register_type.html', message=e)
-
-    return render_template('register_type.html', message="Favor preencher todos os campos")
-
 @app.route("/forgotpassword" , methods=['GET','POST'])
 def forgot_password():
     try:
@@ -179,12 +124,12 @@ def forgot_password():
                     db.session.commit()
                     User.SendMail(token,email)
                 else:
-                    return render_template('forgotpassword.html', message="Email não cadastrado")
+                    return render_template('user/forgotpassword.html', message="Email não cadastrado")
             else:
-                return render_template('forgotpassword.html', message="Preencha todos os campos")
+                return render_template('user/forgotpassword.html', message="Preencha todos os campos")
     except Exception as e:
-        return render_template('forgot_password.html', message=e)
-    return render_template('forgot_password.html')
+        return render_template('user/forgot_password.html', message=e)
+    return render_template('user/forgot_password.html')
 
 @app.route("/changepassword" , methods=['GET','POST'])
 def change_password():
@@ -201,12 +146,12 @@ def change_password():
                         db.session.commit()
                         return render_template('home.html', message="Senha alterada com sucesso")
                     else:
-                        return render_template('change_password.html', message="Senha atual incorreta")
+                        return render_template('user/change_password.html', message="Senha atual incorreta")
                 else:
-                    return render_template('change_password.html', message="Email não cadastrado")
+                    return render_template('user/change_password.html', message="Email não cadastrado")
     except Exception as e:
-        render_template('change_password.html', message=e)
-    return render_template('change_password.html')
+        render_template('user/change_password.html', message=e)
+    return render_template('user/change_password.html')
 
 @app.route("/get_collections" , methods=['GET'])
 def get_collections():
@@ -241,7 +186,58 @@ def get_types():
         # print(e)
         return e
 
+""" @app.route('/register_item' , methods=['GET','POST'])    
+@login_required
+def register_item():
+    try:
+        if request.method == 'POST':
+            name = request.form['name']
+            description = request.form['description']
+            item_type = request.form['type']
+            collection = request.form['Colecao']
+            img = request.files['img']
+            hash = generate_password_hash(name)
+            remove = ["<", ">", "Item_type ", "'"]
+            for i in remove:
+                item_type = item_type.replace(i, "")
+            type = Item_type.query.filter_by(name=item_type).first().id
+            colecao = Colection.query.filter_by(name=collection).first().id
+            if name and description and item_type and img:
+                item = Item(name, description, type, hash)
+                db.session.add(item)
+                db.session.commit()
+                item = Item.query.filter_by(hash=hash).first().id
+                collection = item_in_collection(item, colecao)
+                db.session.add(collection)
+                db.session.commit()
+                basepath = os.path.dirname(__file__)
+                upload_path = os.path.join(basepath+ "/CARDS/", '',"img.jpg")
+                img.save(upload_path)
+                upload_img("img.jpg",hash)
+                return redirect(url_for('itens'))
+            else:
+                return render_template('register_item.html', message="Preencha todos os campos", collections=get_collections(), types=get_types())
+    except Exception as e:
+        return render_template('register_item.html', message=e, collections=get_collections(), types=get_types())
+    return render_template('register_item.html', collections="aaaa", types=get_types())"""
+
+@app.route('/post_type' , methods=['GET','POST'])
+@login_required
+def post_type():
+    try:
+        name = request.args.get('name', 0, type=str)
+        if name:
+            type = Item_type(name)
+            db.session.add(type)
+            db.session.commit()
+            return '201'
+        else:
+            return '400'
+    except Exception as e:
+        return e
+
 @app.route("/post_collection", methods=['GET','POST'])
+@login_required
 def post_collection():
     try:
         name = request.args.get('name', 0, type=str)
@@ -259,7 +255,7 @@ def post_collection():
             return "400"
     except Exception as e:
         return e
-    
+
 """ @app.route("/post_item" , methods=['GET','POST'])
 def post_item():
     try:
@@ -276,6 +272,7 @@ def post_item():
         return e
  """
 @app.route("/get_itens" , methods=['GET','POST'])
+@login_required
 def get_itens():
     try:
         from_id = request.args.get('collection_id', 0, type=int)
@@ -292,6 +289,7 @@ def get_itens():
         return e
 
 @app.route("/inventory" , methods=['GET','POST'])
+@login_required
 def inventory():
     try:
         return render_template('inventory.html')
