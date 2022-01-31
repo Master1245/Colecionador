@@ -4,6 +4,9 @@
 {% endblock %}
 
 {% block content %}
+
+{% include "components/carousel/home_carousel.html" %}
+
 <div class="row pt-2 pb-2 container">
     <div class="col-2 darken rounded">
         <p class="user_name"><i class="bi bi-person"></i> @{{ current_user.name }} </p>
@@ -42,24 +45,6 @@
                 </button>
             </div>
         </div>
-    </div>
-
-
-    <br>
-    <div>
-        <h1>Tipos Cadastrados</h1>
-        {% for i in type %}
-            <p>Nome : {{ i.name }}</p>
-            <br>
-        {% endfor %}
-        <br>
-        <br>
-        <h1>Coleções Cadastradas</h1>
-        {% for i in collection %}
-            <p>Nome : {{ i.name }}</p>
-            <p>Descrição : {{ i.description }}</p>
-            <br>
-        {% endfor %}
     </div>
 </div>
 

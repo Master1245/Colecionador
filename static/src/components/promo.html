@@ -1,0 +1,37 @@
+<div class="rounded darken">
+    <img src="" alt="promotion" id="promo">
+</div>
+
+
+{% block script %}
+<script>
+    promo1 = ["{{ url_for('static', filename='resource/bts1.png') }}", "{{ url_for('static', filename='resource/bts2.png') }}"];
+    promo2 = ["{{ url_for('static', filename='resource/calvo1.png') }}","{{ url_for('static', filename='resource/calvo2.png') }}"];
+    promo3 = ["{{ url_for('static', filename='resource/jalim1.png') }}","{{ url_for('static', filename='resource/jalim2.png') }}"];
+    promo4 = ["{{ url_for('static', filename='resource/rata.png') }}"];
+
+    promotions = [promo1, promo2, promo3, promo4];
+    //get random nunber by length of array promotions
+    function randNum(){
+        return Math.floor(Math.random() * Math.floor(promotions.length));
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        promotion_this = promotions[randNum()];
+        function promoReset(i){
+            $("#promo").attr("src", promotion_this[i]);
+            
+            setTimeout(function(){
+                promoReset((i+1)%2);
+            }, 10000);
+        }
+        if(promotion_this.length == 1){
+            $("#promo").attr("src", promotion_this[0]);
+        }else{
+            promoReset(0);
+        }
+    }, false);
+
+
+    
+</script>
+{% endblock %}

@@ -186,40 +186,36 @@ def get_types():
         # print(e)
         return e
 
-""" @app.route('/register_item' , methods=['GET','POST'])    
+@app.route('/post_item' , methods=['GET','POST'])    
 @login_required
-def register_item():
+def post_item():
     try:
-        if request.method == 'POST':
-            name = request.form['name']
-            description = request.form['description']
-            item_type = request.form['type']
-            collection = request.form['Colecao']
-            img = request.files['img']
-            hash = generate_password_hash(name)
-            remove = ["<", ">", "Item_type ", "'"]
-            for i in remove:
-                item_type = item_type.replace(i, "")
-            type = Item_type.query.filter_by(name=item_type).first().id
-            colecao = Colection.query.filter_by(name=collection).first().id
-            if name and description and item_type and img:
-                item = Item(name, description, type, hash)
-                db.session.add(item)
-                db.session.commit()
-                item = Item.query.filter_by(hash=hash).first().id
-                collection = item_in_collection(item, colecao)
-                db.session.add(collection)
-                db.session.commit()
-                basepath = os.path.dirname(__file__)
-                upload_path = os.path.join(basepath+ "/CARDS/", '',"img.jpg")
-                img.save(upload_path)
-                upload_img("img.jpg",hash)
-                return redirect(url_for('itens'))
-            else:
-                return render_template('register_item.html', message="Preencha todos os campos", collections=get_collections(), types=get_types())
+        name = request.args.get('name', 0, type=str)
+        description = request.args.get('description', 0, type=str)
+        item_type = request.args.get('type', 0, type=int)
+        collection = request.args.get('collection', 0, type=int)
+        img = request.files.get('img')
+        hash = generate_password_hash(name)
+        print(name, description, item_type, collection, hash)
+        return "201"
+        """type = Item_type.query.filter_by(name=item_type).first().id
+        colecao = Colection.query.filter_by(name=collection).first().id
+
+        if name and description and item_type and img:
+            item = Item(name, description, type, hash)
+            db.session.add(item)
+            db.session.commit()
+            item = Item.query.filter_by(hash=hash).first().id
+            collection = item_in_collection(item, colecao)
+            db.session.add(collection)
+            db.session.commit()
+            basepath = os.path.dirname(__file__)
+            upload_path = os.path.join(basepath+ "/CARDS/", '',"img.jpg")
+            img.save(upload_path)
+            upload_img("img.jpg",hash)
+            return "201" """
     except Exception as e:
-        return render_template('register_item.html', message=e, collections=get_collections(), types=get_types())
-    return render_template('register_item.html', collections="aaaa", types=get_types())"""
+        return e
 
 @app.route('/post_type' , methods=['GET','POST'])
 @login_required
@@ -256,21 +252,6 @@ def post_collection():
     except Exception as e:
         return e
 
-""" @app.route("/post_item" , methods=['GET','POST'])
-def post_item():
-    try:
-        if request.method == "POST":
-            name = request.form['name']
-            if name:
-                type = Item_type(name)
-                db.session.add(type)
-                db.session.commit()
-                return render_template("home.html")
-            else:
-                return render_template('register_type.html', message="Preencha todos os campos")
-    except Exception as e:
-        return e
- """
 @app.route("/get_itens" , methods=['GET','POST'])
 @login_required
 def get_itens():
