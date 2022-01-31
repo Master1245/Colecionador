@@ -33,6 +33,7 @@
                 <button class="btn btn-outline-light mh-100 mw-100" data-bs-toggle="modal" data-bs-target="#collection_submit">
                     <i class="bi bi-file-earmark-text"></i>
                     <p> Cadastrar uma Coleção </p>
+                    <a href="{{ url_for('teste') }}">
                 </button>
             </div>
             <div class="col-md-3 col-sm-6 p-3">
@@ -61,6 +62,8 @@
             <br>
         {% endfor %}
     </div>
+
+
 </div>
 
 {{ message }}

@@ -275,16 +275,18 @@ def post_item():
 @login_required
 def get_itens():
     try:
-        from_id = request.args.get('collection_id', 0, type=int)
-        if from_id:
-            """itens_bd = item_in_collection.query.filter(item_in_collection.collection_id(from_id)).order_by(item_in_collection.item_id).all()
-            list_itens = []
-            for i in itens_bd:
-                list_itens.append({'id':i.item_id, 'name':i.item.name, 'description':i.item.description, 'type':i.item.type_id, 'collection':i.collection_id, 'hash':i.item.hash})
-            return jsonify(itens) """
-            return jsonify({'id': '1', 'name': 'pikachu', 'description': 'isaisasa', 'type': '1', 'collection': '1', 'hash': '1'})
-        else:
-            return "400"
+        # from_id = request.args.get('collection_id', 0, type=int)
+        from_id = 44
+        iten_collection = item_in_collection.query.filter_by(collection_id=from_id).all()
+        print(iten_collection.item_id)
+        itens = []
+        for i in iten_collection:
+            itens.append(Item.query.filter_by(id=i.item_id).all())
+        result_itens = []
+        for i in itens:
+            res = {'description':i[0].description, 'name':i[0].name, 'id':i[0].id}
+            result_itens.append(res)
+        return jsonify(result_itens)
     except Exception as e:
         return e
 
