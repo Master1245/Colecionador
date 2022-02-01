@@ -257,10 +257,11 @@ def get_item():
             for i in itens:
                 res = {'description':i[0].description, 'name':i[0].name, 'id':i[0].id}
                 result_itens.append(res)
-            print(result_itens)
             
             return jsonify(result_itens)
-        return "404"
+        #return "404"
+        return jsonify([ {'description':"isto é um teste", 'name':"teste123", 'id':"1", 'type_id':2}, {'description':"sim kkk isso é um teste genio", 'name':"teste456", 'id':"2", 'type_id':2}, {'description':"isto é2312 um teste", 'name':"21312", 'id':"8", 'type_id':2}, {'description':"sim kkk isso é um teste genioooo", 'name':"teste45689", 'id':"3", 'type_id':2}])
+
     except Exception as e:
         return e
 

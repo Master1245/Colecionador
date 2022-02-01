@@ -5,11 +5,14 @@
 {% endblock %}
 
 {% block content %}
-<div class="darken rouded mt-2 itens_container">
+<div class="darken mt-5 rouded p-2">
     <nav aria-label="breadcrumb">
-        <ol class="breadcrumb collection_list">
+        <ol class="breadcrumb mb-2 collection_list">
         </ol>
     </nav>
+</div>
+<div class="darken rouded mt-2 mb-3 itens_container p-2 text-start">
+
 </div>
 
 {% include "components/promo.html" %}
@@ -38,18 +41,21 @@
 
 {% block script %}
 <script>
-  $.get( "{{ url_for('get_collections') }}", function() {
-  }).done(function(e) {
-      if(e.length == 0){
-          $(".alert_modal").modal('show');
-      }else{
-          buildItemList(1);
-          addCollections(e);
-      }
-  }).fail(function(e) {
-      console.log(e);
-      alert( "error collection: "+e.responseText );
-  })
+  
+document.addEventListener('DOMContentLoaded', function() {
+    $.get( "{{ url_for('get_collections') }}", function() {
+        }).done(function(e) {
+            if(e.length == 0){
+                $(".alert_modal").modal('show');
+            }else{
+                    addCollections(e);
+                    ajaxRefresh(e[0].id);
+            }
+        }).fail(function(e) {
+            console.log(e);
+            alert( "error collection: "+e.responseText );
+        })
+    });
   
   types_list = []
   $.get( "{{ url_for('get_types') }}", function() {
@@ -62,15 +68,19 @@
   })
   function addCollections(list){
       for(const i in list){
-          $('.collection_list').append('<li class="breadcrumb-item">'+list[i].name+'</li>');
+          $('.collection_list').append('<li class="breadcrumb-item" name="'+list[i].id+'" onClick="ajaxRefresh('+list[i].id+')">'+list[i].name+'</li>');
       }
-      loadingOff();
+      loadingToggle();
   }
   $('.alert_modal').on('hidden.bs.modal', function (event) {
       window.location.href = "{{ url_for('home') }}";
   });
-  function loadingOff(){
-      $('.loading').hide();
+  function loadingToggle(){
+      if($('.loading').is(":visible")){
+        $('.loading').hide();
+      }else{
+        $('.loading').show();
+      }
   }
   list_bg = ['bg-primary','bg-secondary','bg-success','bg-danger','bg-warning','bg-info','bg-light','bg-dark'];
   function getRandomInt(max) {
@@ -84,29 +94,57 @@
       for(const i in types_list){
           types_list[i].color = getRandomBg();
       }
-      console.log(types_list);
   }
   function get_item(collection_id){
       $.get( "{{ url_for('get_item') }}", {collection_id:collection_id}, function() {
       }).done(function(e) {
-          return e
+            buildItemList(e);
+            return true;
       }).fail(function(e) {
-          console.log(e);
-          alert( "error collection: "+e.responseText );
-          return e
+            alert( "error collection: "+e.responseText );
+            return e;
       })
   }
-  function buildItemList(collection_id){
-      ajax_request = get_item(collection_id)
-      for(const i in ajax_request){
-          $('.itens_container').append(`
-          <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">${i.name}</h5>
-                <p class="card-text">${i.description}</p>
-              </div>
-          </div>`);
-      }
+  function buildItemList(list){
+      col = 0;
+      html = '';
+      for(const i in list){
+            console.log(list[i]);
+            append_text = ""
+            if(col == 0){
+                append_text += '<div class="row">';
+            }
+            append_text += '<div class="col-md-3">';
+            append_text +=  `
+            <div class="card darken">
+                <div class="card-body">
+                    <h5 class="card-title">${list[i].name}</h5>`
+            append_text += `<span class=`+types_list[list[i].type_id].color+`>`+types_list[list[i].type_id].name+`</span>`
+            append_text += `
+                    <p class="card-text">${list[i].description}</p>
+                </div>
+            </div>`
+            append_text += '</div>';
+            if(col == 3){
+                append_text += '</div>';
+                col = 0;
+            }
+            col += 1;
+            html += append_text;
+        }
+        $('.itens_container').html(html);
+  }
+
+  after_id = -1;
+  function ajaxRefresh(collection_id){
+    if(after_id != collection_id){
+
+        get_item(collection_id);
+        $('li[name='+collection_id+']').addClass('disabled');
+        $('li[name='+after_id+']').removeClass('disabled');
+        after_id = collection_id;
+        
+    }
   }
 </script>
 {% endblock %}
