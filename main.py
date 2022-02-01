@@ -249,16 +249,28 @@ def post_collection():
 @app.route("/get_item" , methods=['GET','POST'])
 @login_required
 def get_item():
-        p = []
+        item = []
         collections = []
+        coleção = []
         users_collection = User_Collection.query.filter_by(user_id=current_user.id).all()
         for i in users_collection:
             collections.append(Colection.query.filter_by(id=i.collection_id).all())
-        for i in collections:
+        i = 0 
+        while i < len(collections):
+            coleção.append(item_in_collection.query.filter_by(collection_id=collections[i][0].id).all())
+            i += 1
+        coleção = filter(None, coleção)
+        for i in coleção:
+            for j in i:        
+                item.append(Item.query.filter_by(id=j.item_id).all())
+        collections = []
+        for i in item:
+            for j in i:
+                result = {'name': j.name, 'description': j.description, 'item_type': j.type_id, 'hash': j.hash}
+                collections.append(result)
+        print(collections)
+        return jsonify(collections)
 
-            ite = { 'name': i.name, 'description': i.description}
-            p.append(ite)
-        return jsonify(p)
         for itens in users_collection:
             collections.append(itens.collection_id)
         itens_bd = item_in_collection.query.filter(item_in_collection.collection_id.in_(collections)).order_by(item_in_collection.item_id).all()

@@ -11,7 +11,7 @@ class User(db.Model, UserMixin):
     __tablename = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(64), nullable=False)
-    email = db.Column(db.String(64), unique=True, nullable=True)
+    email = db.Column(db.String(64), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     Token_reset = db.Column(db.String(256), nullable=True)
 
