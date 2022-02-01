@@ -238,7 +238,7 @@ def post_collection():
             db.session.add(user_Collection)
             db.session.commit()
             return "201"
-        else: 
+        else:
             return "400"
     except Exception as e:
         return e
@@ -249,9 +249,7 @@ def get_item():
     try:
         from_id = request.args.get('collection_id', 0, type=int)
         iten_collection = item_in_collection.query.filter_by(collection_id=from_id).all()
-        print(iten_collection)
         if(iten_collection):
-        
             itens = []
             for i in iten_collection:
                 itens.append(Item.query.filter_by(id=i.item_id).all())
