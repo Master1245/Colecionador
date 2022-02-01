@@ -8,21 +8,22 @@
                 <button type="button" class="btn text-white" data-bs-dismiss="modal"> <h3><i class="bi bi-x"></i></h3> </button>
             </div>
             <div class="modal-body">
-                <span>Nome: </span>
-                <input type="text" placeholder="Insira um nome" name="name_item">
-                <br>
-                <span>Descrição: </span>
-                <input type="text" placeholder="Insira uma descricao" name="description_item">
-                <br>
-                <span>Type: </span>
-                <select name="type_select">
-                </select>
-                <br>
-                <span>Coleção: </span>
-                <select name="colecao_select">
-                </select>
-                <br>
-                <input type="file" value="Arquivo" name="img_item">
+                <form enctype="multipart/form-data" id='item_post'>
+                    <span>Nome: </span>
+                    <input type="text" placeholder="Insira um nome" name="name_item">
+                    <br>
+                    <span>Descrição: </span>
+                    <input type="text" placeholder="Insira uma descricao" name="description_item">
+                    <br>
+                    <span>Type: </span>
+                    <select name="type_select">
+                    </select>
+                    <br>
+                    <span>Coleção: </span>
+                    <select name="colecao_select"></select>
+                    <br>
+                    <input type="file" value="Arquivo" name="img_item">
+                </form>
             </div>
             <p class="fst-italic text-danger" id="collection-danger"></p>
             <div class="modal-footer">
@@ -48,38 +49,53 @@ function toggleInputs(){
 
 $(function() {
     $('#new_item_submit').click(function() {
-        name_text = $('input[name="name_item"]').val();
-        description_text = $('input[name="description_item"]').val();
-        type = $('select[name="type_select"]').val();
-        collection = $('select[name="colecao_select"]').val();
-        img = $('input[name="img_item"]').val();
-        if(name_text != '' && description_text != ''){
-            toggleInputs()
-    
-            $.getJSON( "{{ url_for('post_item') }}", {
-                name: name_text,
-                description: description_text,
-                type : type,
-                collection : collection,
-                img : img
-            }).done(function(e) {
-                $('input[name="name_item"]').attr('placeholder', name_text);
-                $('input[name="description_item"').attr('placeholder', description_text);
-                
-                $('input[name="name_item"]').val('');
-                $('input[name="description_item"').val('');
-                $('select[name="type_select"]').selectedIndex = 0;
-                $('select[name="colecao_select"]').selectedIndex = 0;
-                $('input[name="img"]').val('');
-
-
-                toggleInputs()
-            }).fail(function(e) {
-                if(e.responseText = "400"){
-                    $('#collection-danger').text( "*favor preencher todos os campos*")
-                }
-                console.log( e.responseText );
+        if(true){
+            toggleInputs();
+            dataFile = $('#item_post').serialize();
+            
+            event.preventDefault();
+            var form_data = new FormData($('#item_post')[0]);
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('post_item') }}",
+                data: form_data,
+                contentType: false,
+                processData: false
+            }).done(function(data, textStatus, jqXHR){
+                console.log(data);
+                console.log(textStatus);
+                console.log(jqXHR);
+                console.log('Success!');
+            }).fail(function(data){
+                alert('error!');
             });
+
+            /* $.ajax({
+                url : "{{ url_for('post_item') }}",
+                data : $('#item_post').serialize(),
+                method  : 'POST',
+                cache: false,
+                contentType: false,
+                processData: false,
+                success  : function(e){
+                    $('input[name="name_item"]').attr('placeholder', name_item);
+                    $('input[name="description_item"').attr('placeholder', description_text);
+                    
+                    $('input[name="name_item"]').val('');
+                    $('input[name="description_item"').val('');
+                    $('select[name="type_select"]').selectedIndex = 0;
+                    $('select[name="colecao_select"]').selectedIndex = 0;
+                    $('input[name="img"]').val('');
+    
+                    toggleInputs()
+                },
+                error: function(e){
+                    if(e.responseText = "400"){
+                        $('#collection-danger').text( "*favor preencher todos os campos*")
+                    }
+                    console.log( e.responseText );
+                } 
+            });*/
         }else{
             $('#collection-danger').text( "*favor preencher todos os campos*" )
         }

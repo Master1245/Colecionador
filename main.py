@@ -7,6 +7,7 @@ from app.model import User, Item, Item_type, Colection, item_in_collection, User
 from werkzeug.security import generate_password_hash,check_password_hash
 from app.AWS import upload_img, get_img
 from flask import jsonify
+import json
 import os
 
 Migrate(app, db)
@@ -189,34 +190,24 @@ def get_types():
 @app.route('/post_item' , methods=['GET','POST'])    
 @login_required
 def post_item():
-    try:
-        name = request.args.get('name', 0, type=str)
-        description = request.args.get('description', 0, type=str)
-        item_type = request.args.get('type', 0, type=int)
-        collection = request.args.get('collection', 0, type=int)
-        img = request.files.get('img')
-        hash = generate_password_hash(name)
-        print(name, description, item_type, collection, hash)
+    if request.method == "POST":
+        print(request.files)
         return "201"
-        """type = Item_type.query.filter_by(name=item_type).first().id
-        colecao = Colection.query.filter_by(name=collection).first().id
+    return "401"
 
-        if name and description and item_type and img:
-            item = Item(name, description, type, hash)
-            db.session.add(item)
-            db.session.commit()
-            item = Item.query.filter_by(hash=hash).first().id
-            collection = item_in_collection(item, colecao)
-            db.session.add(collection)
-            db.session.commit()
-            basepath = os.path.dirname(__file__)
-            upload_path = os.path.join(basepath+ "/CARDS/", '',"img.jpg")
-            img.save(upload_path)
-            upload_img("img.jpg",hash)
-            return "201" """
-    except Exception as e:
-        return e
-
+    '''if True:
+        item = Item(name, description, item_type, hash)
+        db.session.add(item)
+        db.session.commit()
+        item = Item.query.filter_by(hash=hash).first().id
+        collection = item_in_collection(item, collection)
+        db.session.add(collection)
+        db.session.commit()
+        basepath = os.path.dirname(__file__)
+        upload_path = os.path.join(basepath+ "/CARDS/", '',"img.jpg")
+        img.save(upload_path)
+        upload_img("img.jpg",hash)
+        return "201"'''
 @app.route('/post_type' , methods=['GET','POST'])
 @login_required
 def post_type():
@@ -252,20 +243,26 @@ def post_collection():
     except Exception as e:
         return e
 
-@app.route("/get_itens" , methods=['GET','POST'])
+@app.route("/get_item" , methods=['GET','POST'])
 @login_required
-def get_itens():
+def get_item():
     try:
         from_id = request.args.get('collection_id', 0, type=int)
-        if from_id:
-            """itens_bd = item_in_collection.query.filter(item_in_collection.collection_id(from_id)).order_by(item_in_collection.item_id).all()
-            list_itens = []
-            for i in itens_bd:
-                list_itens.append({'id':i.item_id, 'name':i.item.name, 'description':i.item.description, 'type':i.item.type_id, 'collection':i.collection_id, 'hash':i.item.hash})
-            return jsonify(itens) """
-            return jsonify({'id': '1', 'name': 'pikachu', 'description': 'isaisasa', 'type': '1', 'collection': '1', 'hash': '1'})
-        else:
-            return "400"
+        iten_collection = item_in_collection.query.filter_by(collection_id=from_id).all()
+        print(iten_collection)
+        if(iten_collection):
+        
+            itens = []
+            for i in iten_collection:
+                itens.append(Item.query.filter_by(id=i.item_id).all())
+            result_itens = []
+            for i in itens:
+                res = {'description':i[0].description, 'name':i[0].name, 'id':i[0].id}
+                result_itens.append(res)
+            print(result_itens)
+            
+            return jsonify(result_itens)
+        return "404"
     except Exception as e:
         return e
 

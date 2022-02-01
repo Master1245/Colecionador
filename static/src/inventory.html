@@ -87,7 +87,7 @@
       console.log(types_list);
   }
   function get_item(collection_id){
-      $.get( "{{ url_for('get_itens') }}", {collection_id:collection_id}, function() {
+      $.get( "{{ url_for('get_item') }}", {collection_id:collection_id}, function() {
       }).done(function(e) {
           return e
       }).fail(function(e) {
