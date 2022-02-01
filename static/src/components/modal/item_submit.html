@@ -62,10 +62,8 @@ $(function() {
                 contentType: false,
                 processData: false
             }).done(function(data, textStatus, jqXHR){
-                console.log(data);
-                console.log(textStatus);
-                console.log(jqXHR);
-                console.log('Success!');
+                alert("Upload concluido!");
+                alert(textStatus)
             }).fail(function(data){
                 alert('error!');
             });

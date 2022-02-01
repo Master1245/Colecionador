@@ -1,3 +1,4 @@
+import collections
 from winreg import REG_OPTION_RESERVED
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
@@ -191,7 +192,8 @@ def get_types():
 @login_required
 def post_item():
     if request.method == "POST":
-        print(request.files)
+        request.files['img_item'].save("./CARDS/" + "img.jpg")
+
         return "201"
     return "401"
 
@@ -208,6 +210,7 @@ def post_item():
         img.save(upload_path)
         upload_img("img.jpg",hash)
         return "201"'''
+
 @app.route('/post_type' , methods=['GET','POST'])
 @login_required
 def post_type():
@@ -247,6 +250,7 @@ def post_collection():
 @login_required
 def get_item():
     try:
+<<<<<<< Updated upstream
         from_id = request.args.get('collection_id', 0, type=int)
         iten_collection = item_in_collection.query.filter_by(collection_id=from_id).all()
         if(iten_collection):
@@ -262,6 +266,35 @@ def get_item():
         #return "404"
         return jsonify([ {'description':"isto é um teste", 'name':"teste123", 'id':"1", 'type_id':2}, {'description':"sim kkk isso é um teste genio", 'name':"teste456", 'id':"2", 'type_id':2}, {'description':"isto é2312 um teste", 'name':"21312", 'id':"8", 'type_id':2}, {'description':"sim kkk isso é um teste genioooo", 'name':"teste45689", 'id':"3", 'type_id':2}])
 
+=======
+        collections = []
+        users_collection = User_Collection.query.filter_by(user_id=current_user.id).all()
+        collections = Colection.query.filter(Colection.id.in_(users_collection.collection_id)).all()
+        print(collections)
+        for itens in users_collection:
+            collections.append(itens.collection_id)
+        itens_bd = item_in_collection.query.filter(item_in_collection.collection_id.in_(collections)).order_by(item_in_collection.item_id).all()
+        itens = []
+        for item in itens_bd:
+            itens.append(item.item_id)
+        itens_bd = Item.query.filter(Item.id.in_(itens)).all()
+        img = []
+        for iten in itens_bd:
+            img.append(get_img(iten.hash))
+        
+        # print(iten_collection)
+        # if(iten_collection):
+        #     itens = []
+        #     for i in iten_collection:
+        #         itens.append(Item.query.filter_by(id=i.item_id).all())
+        #     result_itens = []
+        #     for i in itens:
+        #         res = {'description':i[0].description, 'name':i[0].name, 'id':i[0].id}
+        #         result_itens.append(res)
+        #     print(result_itens)
+        # return jsonify(result_itens)
+        return "404"
+>>>>>>> Stashed changes
     except Exception as e:
         return e
 
