@@ -61,41 +61,23 @@ $(function() {
                 data: form_data,
                 contentType: false,
                 processData: false
-            }).done(function(data, textStatus, jqXHR){
-                console.log(data);
-                console.log(textStatus);
-                console.log(jqXHR);
-                console.log('Success!');
-            }).fail(function(data){
-                alert('error!');
-            });
+            }).done(function(e){
+                $('input[name="name_item"]').attr('placeholder', name_item);
+                $('input[name="description_item"').attr('placeholder', description_text);
+                
+                $('input[name="name_item"]').val('');
+                $('input[name="description_item"').val('');
+                $('select[name="type_select"]').selectedIndex = 0;
+                $('select[name="colecao_select"]').selectedIndex = 0;
+                $('input[name="img"]').val('');
 
-            /* $.ajax({
-                url : "{{ url_for('post_item') }}",
-                data : $('#item_post').serialize(),
-                method  : 'POST',
-                cache: false,
-                contentType: false,
-                processData: false,
-                success  : function(e){
-                    $('input[name="name_item"]').attr('placeholder', name_item);
-                    $('input[name="description_item"').attr('placeholder', description_text);
-                    
-                    $('input[name="name_item"]').val('');
-                    $('input[name="description_item"').val('');
-                    $('select[name="type_select"]').selectedIndex = 0;
-                    $('select[name="colecao_select"]').selectedIndex = 0;
-                    $('input[name="img"]').val('');
-    
-                    toggleInputs()
-                },
-                error: function(e){
-                    if(e.responseText = "400"){
-                        $('#collection-danger').text( "*favor preencher todos os campos*")
-                    }
-                    console.log( e.responseText );
-                } 
-            });*/
+                toggleInputs()
+            }).fail(function(e){
+                if(e.responseText = "400"){
+                    $('#collection-danger').text( "*favor preencher todos os campos*")
+                }
+                console.log( e.responseText );
+            });
         }else{
             $('#collection-danger').text( "*favor preencher todos os campos*" )
         }
