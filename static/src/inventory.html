@@ -98,10 +98,12 @@ document.addEventListener('DOMContentLoaded', function() {
   function get_item(collection_id){
       $.get( "{{ url_for('get_item') }}", {collection_id:collection_id}, function() {
       }).done(function(e) {
+          console.log(e);
             buildItemList(e);
             return true;
       }).fail(function(e) {
-            alert( "error collection: "+e.responseText );
+          console.log(e);
+            alert( "error collection: "+e );
             return e;
       })
   }
