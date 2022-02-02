@@ -46,7 +46,7 @@ class Item(db.Model, UserMixin):
     def __init__(self, name, description, type, hash):
         self.name = name
         self.description = description
-        self.type = type
+        self.type_id = type
         self.hash = hash
 
     def getitens(self):
@@ -76,7 +76,7 @@ class Colection(db.Model, UserMixin):
 class item_in_collection(db.Model, UserMixin):
     __tablename__ = 'item_in_collection'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
     collection_id = db.Column(db.Integer, db.ForeignKey('colections.id'), nullable=False)
 
     def __init__(self, item_id, collection_id):

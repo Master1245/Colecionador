@@ -1,5 +1,3 @@
-import collections
-from winreg import REG_OPTION_RESERVED
 from flask import render_template, request, redirect, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
@@ -8,7 +6,6 @@ from app.model import User, Item, Item_type, Colection, item_in_collection, User
 from werkzeug.security import generate_password_hash,check_password_hash
 from app.AWS import upload_img, get_img
 from flask import jsonify
-import json
 import os
 
 Migrate(app, db)
@@ -173,7 +170,6 @@ def get_collections():
         return jsonify(result_collections)
         # return "---".join(str(i.name) for i in collections)
     except Exception as e:
-        # print(e)
         return e
 
 @app.route("/get_types" , methods=['GET'])
@@ -185,7 +181,6 @@ def get_types():
             types.append(result)
         return jsonify(types)
     except Exception as e:
-        # print(e)
         return e
 
 @app.route('/post_item' , methods=['GET','POST'])    
@@ -199,14 +194,13 @@ def post_item():
         type_id = request.form['type_select']
         collection_id = request.form['colecao_select']
         type_id = Item_type.query.filter_by(id=type_id).first()
-        item = Item(name, description, type=type_id.id, hash=hash_img)
-        print(item.getitens())
+        item = Item(name, description, type_id.id, hash_img)
         db.session.add(item)
         db.session.commit()
-        collection = item_in_collection(item, collection_id)
+        collection = item_in_collection(item.id, collection_id)
         db.session.add(collection)
         db.session.commit()
-        upload_img("img.jpg", hash)
+        upload_img(hash=hash_img,img_name="img.jpg")
         return "201"
     return "401"
 
@@ -281,31 +275,7 @@ def get_item():
             for j in i:
                 result = {'name': j.name, 'description': j.description, 'item_type': j.type_id, 'hash': j.hash}
                 collections.append(result)
-        print(collections)
         return jsonify(collections)
-
-        for itens in users_collection:
-            collections.append(itens.collection_id)
-        itens_bd = item_in_collection.query.filter(item_in_collection.collection_id.in_(collections)).order_by(item_in_collection.item_id).all()
-        itens = []
-        for item in itens_bd:
-            itens.append(item.item_id)
-        itens_bd = Item.query.filter(Item.id.in_(itens)).all()
-        img = []
-        for iten in itens_bd:
-            img.append(get_img(iten.hash))
-        
-        # print(iten_collection)
-        # if(iten_collection):
-        #     itens = []
-        #     for i in iten_collection:
-        #         itens.append(Item.query.filter_by(id=i.item_id).all())
-        #     result_itens = []
-        #     for i in itens:
-        #         res = {'description':i[0].description, 'name':i[0].name, 'id':i[0].id}
-        #         result_itens.append(res)
-        #     print(result_itens)
-        # return jsonify(result_itens)
 
 @app.route("/inventory" , methods=['GET','POST'])
 @login_required
