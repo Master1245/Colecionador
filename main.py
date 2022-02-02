@@ -193,7 +193,20 @@ def get_types():
 def post_item():
     if request.method == "POST":
         request.files['img_item'].save("./CARDS/" + "img.jpg")
-
+        hash_img = generate_password_hash(request.files['img_item'].filename)
+        name = request.form['name_item']
+        description = request.form['description_item']
+        type_id = request.form['type_select']
+        collection_id = request.form['colecao_select']
+        type_id = Item_type.query.filter_by(id=type_id).first()
+        item = Item(name, description, type=type_id.id, hash=hash_img)
+        print(item.getitens())
+        db.session.add(item)
+        db.session.commit()
+        collection = item_in_collection(item, collection_id)
+        db.session.add(collection)
+        db.session.commit()
+        upload_img("img.jpg", hash)
         return "201"
     return "401"
 
