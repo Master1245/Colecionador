@@ -1,10 +1,4 @@
-#promo{
-    background-position: center; 
-    background-image: none; 
-    height: 180px;  
-    background-repeat: no-repeat;  
-    background-size: cover;
-}
+
 .hover:hover{
     opacity: 0.1;
 }

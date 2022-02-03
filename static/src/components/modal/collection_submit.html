@@ -1,4 +1,3 @@
-
 <!-- Modal -->
 <div class="modal fade" id="collection_submit" tabindex="-1" aria-labelledby="collection_submit" aria-hidden="true">
     <div class="modal-dialog darken">
@@ -7,7 +6,7 @@
                 <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-file-earmark-text"></i> Criar uma nova colecção no sistema.</h5>
                 <button type="button" class="btn text-white" data-bs-dismiss="modal"> <h3><i class="bi bi-x"></i></h3> </button>
             </div>
-            <div class="modal-body pt-4 ps-5 pe-5 pb-4 text-start">
+            <div class="modal-body pt-4 ps-5 pe-5 text-start">
                 <form>
                     <div class="mb-3 row">
                         <label class="col-sm-3 col-form-label" for="name_collection">Nome: </label>
@@ -27,7 +26,7 @@
             <div class="modal-footer">
                 <button id="submit_new_collection" type="button" class="btn btn-outline-light">
                     <p class="align-middle m-0"> Submeter </p>
-                    <div class="spinner-border text-light loading" role="status">
+                    <div class="spinner-border text-light loading" role="status" id="status_text_collection">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </button>
@@ -38,41 +37,70 @@
 
 {% block script %}
 <script>
-$('#submit_new_collection > div').hide();
+    $('#submit_new_collection > div').hide();
 
-function toggleInputs(){
-    $('#submit_new_collection > p').toggle();
-    $('#submit_new_collection > div').toggle();
-}
+    function toggleInputs(){
+        $('#submit_new_collection > p').toggle();
+        $('#submit_new_collection > div').toggle();
+    }
+    function htmlStatusCollection(color){
+        $("#submit_new_collection").removeAttr('class');
+        $("#submit_new_collection").attr('class', 'btn btn-outline-'+color);
+        $("#status_text_collection").removeAttr('class');
+        $("#status_text_collection").attr('class', 'spinner-border text-'+color+' loading');
 
-$(function() {
-    $('#submit_new_collection').click(function() {
-        name_text = $('input[name="name_collection"]').val();
-        description_text = $('input[name="description_collection"]').val();
-        if(name_text != '' && description_text != ''){
-            toggleInputs()
-    
-            $.getJSON( "{{ url_for('post_collection') }}", {
-                name: name_text,
-                description: description_text
-            }).done(function(e) {
-                $('input[name="name_collection"]').attr('placeholder', name_text);
-                $('input[name="description_collection"').attr('placeholder', description_text);
-                
-                $('input[name="name_collection"]').val('');
-                $('input[name="description_collection"').val('');
-
-                toggleInputs()
-            }).fail(function(e) {
-                if(e.responseText = 400){
-                    $('#collection-danger').text( "*favor preencher todos os campos*")
-                }
-                console.log( e.responseText );
-            });
-        }else{
-            $('#collection-danger').text( "*favor preencher todos os campos*" )
+    }
+    function setStatusCollection(status){
+        switch(status){
+            case 'default':
+                htmlStatusCollection('light')
+                break;
+            case 'loading':
+                htmlStatusCollection('warning')
+                break;
+            case 'success':
+                htmlStatusCollection('success')
+                break;
+            case 'error':
+                htmlStatusCollection('danger')
+                break;
+            default:
+                console.log('Status do request não reconhecido, verifique o código.');
+                break;
         }
+    }
+    $(function() {
+        $('#submit_new_collection').click(function() {
+            name_text = $('input[name="name_collection"]').val();
+            description_text = $('input[name="description_collection"]').val();
+            if(name_text != '' && description_text != ''){
+                
+                setStatusCollection('loading')
+                toggleInputs()
+        
+                $.getJSON( "{{ url_for('post_collection') }}", {
+                    name: name_text,
+                    description: description_text
+                }).done(function(e) {
+                    setStatusCollection('success')
+                    $('input[name="name_collection"]').val('');
+                    $('input[name="description_collection"').val('');
+
+                    toggleInputs()
+                }).fail(function(e) {
+                    if(e.responseText = 400){
+                        setStatusCollection('error')
+                        $('#collection-danger').text( "*favor preencher todos os campos*")
+                    }
+                    console.log( e.responseText );
+                });
+            }else{
+                $('#collection-danger').text( "*favor preencher todos os campos*" )
+            }
+        });
     });
-});
+    $( "#collection_submit" ).on('shown.bs.modal', function (e) {
+        setStatusCollection('default')
+    });
 </script>
 {% endblock %}

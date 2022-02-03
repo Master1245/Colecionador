@@ -5,7 +5,7 @@
 {% block content %}
 <div class="rounded darken position-relative">
     <a href="https://www.youtube.com/watch?v=iik25wqIuFo&ab_channel=Rickroll%2Cbutwithadifferentlink">
-        <div id="promo" class="rounded image_div"></div>
+        <img id="promo" src="" alt="" class="rounded img-fluid">
     </a>
     <div class="position-absolute bottom-0 end-0">
         <a href="https://www.youtube.com/watch?v=XZ5Uv4JKTU4&ab_channel=20t?autoplay=1" class='hover'>
@@ -30,8 +30,9 @@
     promo9 = ["{{ url_for('static', filename='resource/cris.png') }}"];
     promo10 = ["{{ url_for('static', filename='resource/mateus.png') }}"];
     promo11 = ["{{ url_for('static', filename='resource/rico.png') }}"];
+    promo12 = ["{{ url_for('static', filename='resource/edge.png') }}"];
 
-    promotions = [promo1, promo2, promo3, promo4, promo5, promo6, promo7, promo8, promo9, promo10, promo11];
+    promotions = [promo1, promo2, promo3, promo4, promo5, promo6, promo7, promo8, promo9, promo10, promo11, promo12];
     //get random nunber by length of array promotions
     function randNum(){
         return Math.floor(Math.random() * Math.floor(promotions.length));
@@ -39,7 +40,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         promotion_this = promotions[randNum()];
         function promoReset(i){
-            $("#promo").css('background-image', 'url('+promotion_this[i]+')');
+            $("#promo").attr("src", promotion_this[i]);
             
             setTimeout(function(){
                 if(promotion_this.length > i+1){
@@ -50,7 +51,7 @@
             }, 10000);
         }
         if(promotion_this.length == 1){
-            $("#promo").css('background-image', 'url('+promotion_this[0]+')');
+            $("#promo").attr("src", promotion_this[0]);
         }else{
             promoReset(0);
         }

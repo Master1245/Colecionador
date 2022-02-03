@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
   $.get( "{{ url_for('get_types') }}", function() {
   }).done(function(e) {
       types_list = e;
+      console.log(types_list);
       typesSetColor();
   }).fail(function(e) {
       console.log(e);
@@ -96,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function() {
   function get_item(collection_id){
       $.get( "{{ url_for('get_item') }}", {collection_id:collection_id}, function() {
       }).done(function(e) {
-          console.log(e);
             buildItemList(e);
             return true;
       }).fail(function(e) {
@@ -109,7 +109,16 @@ document.addEventListener('DOMContentLoaded', function() {
       col = 0;
       html = '';
       for(const i in list){
-            console.log(list[i]);
+            this_type = {};
+            console.log(types_list,list[i]);
+            for(const j in types_list){
+                if(types_list[j].id == list[i].item_type){
+                    this_type = types_list[j];
+                    
+                    console.log(this_type);
+                    break;
+                }
+            }
             append_text = ""
             if(col == 0){
                 append_text += '<div class="row">';
@@ -119,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="card darken">
                 <div class="card-body">
                     <h5 class="card-title">${list[i].name}</h5>`
-            append_text += `<span class=`+types_list[list[i].type_id].color+`>`+types_list[list[i].type_id].name+`</span>`
+            append_text += `<span class=`+this_type.color+`>`+this_type.name+`</span>`
             append_text += `
                     <p class="card-text">${list[i].description}</p>
                 </div>
@@ -138,6 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
   after_id = -1;
   function ajaxRefresh(collection_id){
     if(after_id != collection_id){
+        $('.itens_container').empty();
 
         get_item(collection_id);
         $('li[name='+collection_id+']').addClass('disabled');

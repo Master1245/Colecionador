@@ -1,4 +1,4 @@
-
+<br>
 <!-- Modal -->
 <div class="modal fade" id="item_submit" tabindex="-1" aria-labelledby="item_submit" aria-hidden="true">
     <div class="modal-dialog">
@@ -7,22 +7,36 @@
                 <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-file-earmark-plus"></i> Criar um novo item no sistema.</h5>
                 <button type="button" class="btn text-white" data-bs-dismiss="modal"> <h3><i class="bi bi-x"></i></h3> </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body pt-4 ps-5 pe-5 text-start">
                 <form enctype="multipart/form-data" id='item_post'>
-                    <span>Nome: </span>
-                    <input type="text" placeholder="Insira um nome" name="name_item">
-                    <br>
-                    <span>Descrição: </span>
-                    <input type="text" placeholder="Insira uma descricao" name="description_item">
-                    <br>
-                    <span>Type: </span>
-                    <select name="type_select">
-                    </select>
-                    <br>
-                    <span>Coleção: </span>
-                    <select name="colecao_select"></select>
-                    <br>
-                    <input type="file" value="Arquivo" name="img_item">
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label" for="name_item">Nome: </label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="Insira um nome" name="name_item" id="name_item">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label" for="decription_item">Descrição: </label>
+                        <div class="col-sm-9">
+                            <input type="text" placeholder="Insira uma descricao" name="description_item" id="decription_item">
+                        </div>
+                    <div>
+                    <div class="mb-3 row mt-3">
+                        <label class="col-sm-3 col-form-label" for="type_item">Tipo: </label>
+                        <div class="col-sm-9">
+                            <select class="form-select" name="type_select" id="type_item"></select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label" for="collection_item">Coleção: </label>
+                        <div class="col-sm-9">
+                            <select class="form-select" name="colecao_select" id="collection_item"></select>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label class="col-sm-3 col-form-label" for="image_item">Imagem: </label>
+                        <input  class="form-control" type="file" value="Arquivo" name="img_item" id="image_item">
+                    </div>
                 </form>
             </div>
             <p class="fst-italic text-danger" id="collection-danger"></p>

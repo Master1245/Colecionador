@@ -1,4 +1,3 @@
-
 <!-- Modal -->
 <div class="modal fade" id="type_submit" tabindex="-1" aria-labelledby="type_submit" aria-hidden="true">
     <div class="modal-dialog">
@@ -7,7 +6,7 @@
                 <h5 class="modal-title" id="exampleModalLabel"><i class="bi bi-file-earmark-arrow-up"></i> Criar um novo tipo no sistema.</h5>
                 <button type="button" class="btn text-white" data-bs-dismiss="modal"> <h3><i class="bi bi-x"></i></h3> </button>
             </div>
-            <div class="modal-body pt-4 ps-5 pe-5 pb-4 text-start">
+            <div class="modal-body pt-4 ps-5 pe-5 text-start">
                 <form>
                     <div class="row">
                         <label class="col-sm-3 col-form-label" for="type_name_input">Nome: </label>
@@ -34,64 +33,72 @@
 <script>
     $('#new_type_submit > div').hide();
 
-function toggleInputs(){
-    $('#new_type_submit > p').toggle();
-    $('#new_type_submit > div').toggle();
-}
-function htmlStatus(color){
-    $("#new_type_submit").removeAttr('class');
-    $("#new_type_submit").attr('class', 'btn btn-outline-'+color);
-    $("#status_text").removeAttr('class');
-    $("#status_text").attr('class', 'spinner-border text-'+color+' loading');
-
-}
-function setStatus(status){
-    switch(status){
-        case 'default':
-            htmlStatus('light')
-            break;
-        case 'loading':
-            htmlStatus('warning')
-            break;
-        case 'success':
-            htmlStatus('success')
-            break;
-        case 'error':
-            htmlStatus('danger')
-            break;
-        default:
-            console.log('Status do request não reconhecido, verifique o código.');
-            break;
+    function toggleInputs(){
+        $('#new_type_submit > p').toggle();
+        $('#new_type_submit > div').toggle();
     }
-}
-$(function() {
-    $('#new_type_submit').click(function() {
-        name_text = $('#type_name_input').val();
-        if(name_text != ''){
-            
-            setStatus('loading')
-            toggleInputs()
+    function htmlStatus(color){
+        $("#new_type_submit").removeAttr('class');
+        $("#new_type_submit").attr('class', 'btn btn-outline-'+color);
+        $("#status_text").removeAttr('class');
+        $("#status_text").attr('class', 'spinner-border text-'+color+' loading');
 
-            $.getJSON( "{{ url_for('post_type') }}", {
-                name: name_text
-            }).done(function(e) {
+    }
+    function setStatus(status){
+        switch(status){
+            case 'default':
+                htmlStatus('light')
+                break;
+            case 'loading':
+                htmlStatus('warning')
+                break;
+            case 'success':
                 htmlStatus('success')
-                $('type_name_input').val('');
-                toggleInputs()
-            }).fail(function(e) {
-                setStatus('error')
-                if(e.responseText = "400"){
-                    $('#collection-danger').text( "*favor preencher todos os campos*")
-                }
-                console.log( e.responseText );
-            });
-        }else{
-            $('#collection-danger').text( "*favor preencher todos os campos*" )
+                break;
+            case 'error':
+                htmlStatus('danger')
+                break;
+            default:
+                console.log('Status do request não reconhecido, verifique o código.');
+                break;
         }
+    }
+    $(function() {
+        $('#new_type_submit').click(function() {
+            name_text = $('#type_name_input').val();
+            if(name_text != ''){
+                
+                setStatus('loading')
+                toggleInputs()
+
+                $.getJSON( "{{ url_for('post_type') }}", {
+                    name: name_text
+                }).done(function(e) {
+                    htmlStatus('success')
+                    $('type_name_input').val('');
+                    toggleInputs()
+                }).fail(function(e) {
+                    setStatus('error')
+                    if(e.responseText = "400"){
+                        $('#collection-danger').text( "*favor preencher todos os campos*")
+                    }
+                    console.log( e.responseText );
+                });
+            }else{
+                $('#collection-danger').text( "*favor preencher todos os campos*" )
+            }
+        });
     });
-});
-$( "#type_submit" ).on('shown.bs.modal', function (e) {
-    setStatus('default')
-});
+    $( "#type_submit" ).on('shown.bs.modal', function (e) {
+        setStatus('default')
+    });
+        
+    $(document).ready(function () {
+        $('.form-control').keypress(function (e) {
+                var code = null;
+                code = (e.keyCode ? e.keyCode : e.which);                
+                return (code == 13) ? false : true;
+        });
+    });
 </script>
 {% endblock %}
