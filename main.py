@@ -274,7 +274,6 @@ def get_item():
         for i in item:
             for j in i:
                 link_img = get_img(j.hash)
-                print(link_img)
                 result = {'name': j.name, 'description': j.description, 'item_type': j.type_id, 'hash': j.hash, "link_img": link_img}
                 collections.append(result)
         return jsonify(collections)
