@@ -261,7 +261,8 @@ def get_item():
     itens_in_collection = item_in_collection.query.filter_by(collection_id=collection_user).all()
     for i in itens_in_collection:
         item = Item.query.filter_by(id=i.item_id).first()
-        result = {'name': item.name, 'description': item.description, 'type': item.type_id, 'hash': item.hash}	
+        img_link = get_img(item.hash)
+        result = {'name': item.name, 'description': item.description, 'type': item.type_id, 'link_img': img_link}	
         collection.append(result)
     return jsonify(collection)
 
