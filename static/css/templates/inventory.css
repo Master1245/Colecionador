@@ -15,3 +15,36 @@ li.disabled{
     pointer-events: none;
     opacity: 0.4;
 }
+span.disabled{
+    pointer-events: none;
+    opacity: 0.4;
+}
+.cardImage{
+    background-position: center; 
+    background-size: cover; 
+    height: 250px
+}
+.collection_list li{
+    border-bottom: 1px solid #ffffff;
+}
+@media(max-width: 1200px){
+    .cardImage{
+        height: 160px
+    }
+    
+}
+@media(max-width: 990px){
+    .cardImage{
+        height: 120px
+    }
+}
+@media(max-width: 780px){
+    .cardImage{
+        height: 200px
+    }
+}
+@media(max-width: 550px){
+    .cardImage{
+        height: 300px
+    }
+}

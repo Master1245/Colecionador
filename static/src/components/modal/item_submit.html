@@ -56,46 +56,44 @@
 <script>
     $('#new_item_submit > div').hide();
 
-function toggleInputs(){
-    $('#new_item_submit > p').toggle();
-    $('#new_item_submit > div').toggle();
-}
+    function toggleInputsItem(){
+        $('#new_item_submit > p').toggle();
+        $('#new_item_submit > div').toggle();
+    }
 
-$(function() {
-    $('#new_item_submit').click(function() {
-        if(true){
-            toggleInputs();
-            dataFile = $('#item_post').serialize();
-            
-            event.preventDefault();
-            var form_data = new FormData($('#item_post')[0]);
-            $.ajax({
-                type: 'POST',
-                url: "{{ url_for('post_item') }}",
-                data: form_data,
-                contentType: false,
-                processData: false
-            }).done(function(e){
-                $('input[name="name_item"]').attr('placeholder', name_item);
-                $('input[name="description_item"').attr('placeholder', description_text);
-                $('input[name="name_item"]').val('');
-                $('input[name="description_item"').val('');
-                $('select[name="type_select"]').selectedIndex = 0;
-                $('select[name="colecao_select"]').selectedIndex = 0;
-                $('input[name="img"]').val('');
+    $(function() {
+        $('#new_item_submit').click(function() {
+            if(true){
+                toggleInputsItem();
+                dataFile = $('#item_post').serialize();
+                
+                event.preventDefault();
+                var form_data = new FormData($('#item_post')[0]);
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('post_item') }}",
+                    data: form_data,
+                    contentType: false,
+                    processData: false
+                }).done(function(e){
+                    toggleInputsItem()
 
-                toggleInputs()
-            }).fail(function(e){
-                if(e.responseText = "400"){
-                    $('#collection-danger').text( "*favor preencher todos os campos*")
-                }
-                console.log( e.responseText );
-            });
-        }else{
-            $('#collection-danger').text( "*favor preencher todos os campos*" )
-        }
+                    $('#name_item').val('');
+                    $('#decription_item').val('');
+                    $('#type_item').selectedIndex = 0;
+                    $('#collection_item').selectedIndex = 0;
+                    $('#image_item]').val('');
+                }).fail(function(e){
+                    if(e.responseText = "400"){
+                        $('#collection-danger').text( "*favor preencher todos os campos*")
+                    }
+                    console.log( e.responseText );
+                });
+            }else{
+                $('#collection-danger').text( "*favor preencher todos os campos*" )
+            }
+        });
     });
-});
 </script>
 <script>
     function manager_error(){
@@ -150,7 +148,10 @@ $(function() {
         })
     }
 
-    get_collections();
-    get_types();
+    function attrAjax(){
+        get_collections();
+        get_types();
+    }
+    attrAjax();
 </script>
 {% endblock %}

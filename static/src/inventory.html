@@ -5,13 +5,16 @@
 {% endblock %}
 
 {% block content %}
-<div class="darken mt-5 rouded p-2">
+<div class="darken mt-4 rouded p-2">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-2 collection_list">
         </ol>
     </nav>
 </div>
-<div class="darken rouded mt-2 mb-3 itens_container p-2 text-start">
+<div class="darken mt-1 rouded p-2 name-desc position-relative">
+
+</div>
+<div class="darken rouded mt-3 mb-3 itens_container p-2 text-start">
 
 </div>
 
@@ -35,18 +38,31 @@
         </div>
     </div>
 </div>
+
+<div class="modal utility_modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content darken">
+            <div class="modal-body utility_body">
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">voltar</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block script %}
 <script>
-  
-document.addEventListener('DOMContentLoaded', function() {
+    collection_list = []
+    document.addEventListener('DOMContentLoaded', function() {
     $.get( "{{ url_for('get_collections') }}", function() {
         }).done(function(e) {
             if(e.length == 0){
                 $(".alert_modal").modal('show');
             }else{
                     addCollections(e);
+                    collection_list = e;
                     ajaxRefresh(e[0].id);
             }
         }).fail(function(e) {
@@ -81,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         $('.loading').show();
       }
   }
-  list_bg = ['bg-primary','bg-secondary','bg-success','bg-danger','bg-warning','bg-info','bg-light','bg-dark'];
+  list_bg = ['bg-primary','bg-secondary','bg-success','bg-danger','bg-warning','bg-info'];
   function getRandomInt(max) {
       return Math.floor(Math.random() * Math.floor(max));
   }
@@ -95,9 +111,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
   }
   function get_item(collection_id){
+      loadingInfo()
       $.get( "{{ url_for('get_item') }}", {collection_id:collection_id}, function() {
       }).done(function(e) {
-            buildItemList(e);
+            if(e.length > 0){
+                buildItemList(e);
+            }else{
+                emptyItem();
+            }
             return true;
       }).fail(function(e) {
           console.log(e);
@@ -105,14 +126,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return e;
       })
   }
+  function emptyItem(){
+        $('.itens_container').html('<div class="alert alert-warning m-0" role="alert">Nenhum item cadastrado</div>');
+  }
   function buildItemList(list){
       col = 0;
       html = '';
       for(const i in list){
             this_type = {};
-            console.log(types_list,list[i]);
             for(const j in types_list){
-                if(types_list[j].id == list[i].item_type){
+                if(types_list[j].id == list[i].type){
                     this_type = types_list[j];
                     
                     console.log(this_type);
@@ -123,22 +146,23 @@ document.addEventListener('DOMContentLoaded', function() {
             if(col == 0){
                 append_text += '<div class="row">';
             }
-            append_text += '<div class="col-md-3">';
+            append_text += '<div class="col-sm-6 col-md-3 mb-3">';
             append_text +=  `
-            <div class="card darken">
+            <div class="card darken-50">
                 <div class="card-body">
-                    <h5 class="card-title">${list[i].name}</h5>`
-            append_text += `<span class=`+this_type.color+`>`+this_type.name+`</span>`
+                    <div class="cardImage" style="background-image: url('${list[i].link_img}');"></div>
+                    <h3 class="card-title mt-2 mb-1">${list[i].name}</h3>`
+            append_text += `<strong><span class="`+this_type.color+` rounded p-1 text-uppercase">`+this_type.name+`</span></strong>`
             append_text += `
                     <p class="card-text">${list[i].description}</p>
                 </div>
             </div>`
             append_text += '</div>';
-            if(col == 3){
+            col += 1;
+            if(col == 4){
                 append_text += '</div>';
                 col = 0;
             }
-            col += 1;
             html += append_text;
         }
         $('.itens_container').html(html);
@@ -149,6 +173,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if(after_id != collection_id){
         $('.itens_container').empty();
 
+        this_obj = [];
+        for(const j in collection_list){
+            if(collection_list[j].id == collection_id){
+                this_obj = collection_list[j];
+                break;
+            }
+        }
+        
+        setDescAndName(this_obj.id, this_obj.name, this_obj.description);
         get_item(collection_id);
         $('li[name='+collection_id+']').addClass('disabled');
         $('li[name='+after_id+']').removeClass('disabled');
@@ -156,5 +189,58 @@ document.addEventListener('DOMContentLoaded', function() {
         
     }
   }
+  function loadingInfo(){
+        $('.itens_container').append(`
+        <div class="position-relative" style="height:180px">
+            <div class="position-relative"  style="height:100%">
+                <div class="position-absolute top-50 start-50 translate-middle">
+                    <div class="spinner-border text-light" role="status"  style="height:80px;width:80px;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </div>`);
+  }
+  function setDescAndName(id, name, desc){
+      $('.name-desc').empty();
+      $('.name-desc').append(`<p class="text-start m-0">${name}: <span class="fst-italic disabled">${desc}</span></p><div class="position-absolute top-0 end-0"><div onClick="deleteCollection(${id})" class="bg-danger rounded ps-3 pe-3 pt-1 pb-1 mt-1 me-1">X</div></div>`);
+
+  }
+
+  /*function deleteCollection(id){
+      console.log(id);
+      $('.utility_body').append(`
+            <div class="pt-2 pb-2 pe-5 ps-5">
+                <h1>Você tem certeza que deseja excluir esta coleção?</h1>
+                <div class="row">
+                    <div class="col-sm-6 text-end">
+                        <button class="btn btn-danger" onClick="deleteCollectionConfirm(${id})">Sim</button>
+                    </div>
+                    <div class="col-sm-6 text-start">
+                        <button class="btn btn-secondary" onClick="deleteCollectionCancel()">Não</button>
+                    </div>
+                </div>
+            </div>`);
+      $('.utility_modal').modal('show');
+  }
+  function deleteCollectionCancel(){
+    $('.utility_modal').modal('hide');
+  }
+  function deleteCollectionConfirm(id){
+    $('.utility_modal').modal('hide');
+    $.get( "{{ url_for('delete_collection') }}", {id:id}, function() {
+    }).done(function(e) {
+        if(e.length > 0){
+            buildCollectionList(e);
+        }else{
+            emptyCollection();
+        }
+        return true;
+    }).fail(function(e) {
+        console.log(e);
+        alert( "error collection: "+e );
+        return e;
+    })
+  }*/
 </script>
 {% endblock %}

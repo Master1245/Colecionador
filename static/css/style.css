@@ -1,7 +1,8 @@
 .darken{
     background-color: #1d1d1d;
-
 }
+.darken-50{
+    background-color: #333333;}
 .center-div{
     position: absolute;
     top: 50%;
