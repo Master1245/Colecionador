@@ -56,7 +56,7 @@
 <script>
     collection_list = []
     document.addEventListener('DOMContentLoaded', function() {
-    $.get( "{{ url_for('get_collections') }}", function() {
+        $.get( "{{ url_for('get_collections') }}", function() {
         }).done(function(e) {
             if(e.length == 0){
                 $(".alert_modal").modal('show');
@@ -70,63 +70,90 @@
             alert( "error collection: "+e.responseText );
         })
     });
+    after_id = -1;
+    function ajaxRefresh(collection_id){
+      if(after_id != collection_id){
+          $('.itens_container').empty();
   
-  types_list = []
-  $.get( "{{ url_for('get_types') }}", function() {
-  }).done(function(e) {
-      types_list = e;
-      console.log(types_list);
-      typesSetColor();
-  }).fail(function(e) {
-      console.log(e);
-      alert( "error collection: "+e.responseText );
-  })
-  function addCollections(list){
-      for(const i in list){
-          $('.collection_list').append('<li class="breadcrumb-item" name="'+list[i].id+'" onClick="ajaxRefresh('+list[i].id+')">'+list[i].name+'</li>');
+          this_obj = [];
+          for(const j in collection_list){
+              if(collection_list[j].id == collection_id){
+                  this_obj = collection_list[j];
+                  break;
+              }
+          }
+          
+          setDescAndName(this_obj.id, this_obj.name, this_obj.description);
+          get_item(collection_id);
+          $('li[name='+collection_id+']').addClass('disabled');
+          $('li[name='+after_id+']').removeClass('disabled');
+          after_id = collection_id;
+          
       }
-      loadingToggle();
-  }
-  $('.alert_modal').on('hidden.bs.modal', function (event) {
-      window.location.href = "{{ url_for('home') }}";
-  });
-  function loadingToggle(){
-      if($('.loading').is(":visible")){
-        $('.loading').hide();
-      }else{
-        $('.loading').show();
-      }
-  }
-  list_bg = ['bg-primary','bg-secondary','bg-success','bg-danger','bg-warning','bg-info'];
-  function getRandomInt(max) {
-      return Math.floor(Math.random() * Math.floor(max));
-  }
-  function getRandomBg(){
-      return list_bg[getRandomInt(list_bg.length)];
-  }
-  function typesSetColor(){
-      //set new attribute to object in types_list
-      for(const i in types_list){
-          types_list[i].color = getRandomBg();
-      }
-  }
-  function get_item(collection_id){
-      loadingInfo()
-      $.get( "{{ url_for('get_item') }}", {collection_id:collection_id}, function() {
-      }).done(function(e) {
-            if(e.length > 0){
-                buildItemList(e);
-            }else{
-                emptyItem();
-            }
-            return true;
-      }).fail(function(e) {
-          console.log(e);
-            alert( "error collection: "+e );
-            return e;
-      })
-  }
-  function emptyItem(){
+    }  
+    function setDescAndName(id, name, desc){
+        $('.name-desc').empty();
+        $('.name-desc').append(`<p class="text-start m-0">${name}: <span class="fst-italic disabled">${desc}</span></p><div class="position-absolute top-0 end-0"><div onClick="deleteCollection(${id})" class="bg-danger rounded ps-3 pe-3 pt-1 pb-1 mt-1 me-1">X</div></div>`);
+  
+    }  
+    function addCollections(list){
+        for(const i in list){
+            $('.collection_list').append('<li class="breadcrumb-item" name="'+list[i].id+'" onClick="ajaxRefresh('+list[i].id+')">'+list[i].name+'</li>');
+        }
+        loadingToggle();
+    }
+    function loadingToggle(){
+        if($('.loading').is(":visible")){
+          $('.loading').hide();
+        }else{
+          $('.loading').show();
+        }
+    }
+    types_list = []
+    $.get( "{{ url_for('get_types') }}", function() {
+    }).done(function(e) {
+        if(e.length > 0){
+            types_list = e;
+            typesSetColor();
+        }
+    }).fail(function(e) {
+        console.log(e);
+        alert( "error collection: "+e.responseText );
+    })
+    $('.alert_modal').on('hidden.bs.modal', function (event) {
+        window.location.href = "{{ url_for('home') }}";
+    });
+  
+    list_bg = ['bg-primary','bg-secondary','bg-success','bg-danger','bg-warning','bg-info'];
+    function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+    function getRandomBg(){
+        return list_bg[getRandomInt(list_bg.length)];
+    }
+    function typesSetColor(){
+        //set new attribute to object in types_list
+        for(const i in types_list){
+            types_list[i].color = getRandomBg();
+        }
+    }
+    function get_item(collection_id){
+        loadingInfo()
+        $.get( "{{ url_for('get_item') }}", {collection_id:collection_id}, function() {
+        }).done(function(e) {
+              if(e.length > 0){
+                  buildItemList(e);
+              }else{
+                  emptyItem();
+              }
+              return true;
+        }).fail(function(e) {
+            console.log(e);
+              alert( "error collection: "+e );
+              return e;
+        })
+    }
+    function emptyItem(){
         $('.itens_container').html('<div class="alert alert-warning m-0" role="alert">Nenhum item cadastrado</div>');
   }
   function buildItemList(list){
@@ -166,30 +193,8 @@
             html += append_text;
         }
         $('.itens_container').html(html);
-  }
-
-  after_id = -1;
-  function ajaxRefresh(collection_id){
-    if(after_id != collection_id){
-        $('.itens_container').empty();
-
-        this_obj = [];
-        for(const j in collection_list){
-            if(collection_list[j].id == collection_id){
-                this_obj = collection_list[j];
-                break;
-            }
-        }
-        
-        setDescAndName(this_obj.id, this_obj.name, this_obj.description);
-        get_item(collection_id);
-        $('li[name='+collection_id+']').addClass('disabled');
-        $('li[name='+after_id+']').removeClass('disabled');
-        after_id = collection_id;
-        
     }
-  }
-  function loadingInfo(){
+    function loadingInfo(){
         $('.itens_container').append(`
         <div class="position-relative" style="height:180px">
             <div class="position-relative"  style="height:100%">
@@ -201,46 +206,5 @@
             </div>
         </div>`);
   }
-  function setDescAndName(id, name, desc){
-      $('.name-desc').empty();
-      $('.name-desc').append(`<p class="text-start m-0">${name}: <span class="fst-italic disabled">${desc}</span></p><div class="position-absolute top-0 end-0"><div onClick="deleteCollection(${id})" class="bg-danger rounded ps-3 pe-3 pt-1 pb-1 mt-1 me-1">X</div></div>`);
-
-  }
-
-  /*function deleteCollection(id){
-      console.log(id);
-      $('.utility_body').append(`
-            <div class="pt-2 pb-2 pe-5 ps-5">
-                <h1>Você tem certeza que deseja excluir esta coleção?</h1>
-                <div class="row">
-                    <div class="col-sm-6 text-end">
-                        <button class="btn btn-danger" onClick="deleteCollectionConfirm(${id})">Sim</button>
-                    </div>
-                    <div class="col-sm-6 text-start">
-                        <button class="btn btn-secondary" onClick="deleteCollectionCancel()">Não</button>
-                    </div>
-                </div>
-            </div>`);
-      $('.utility_modal').modal('show');
-  }
-  function deleteCollectionCancel(){
-    $('.utility_modal').modal('hide');
-  }
-  function deleteCollectionConfirm(id){
-    $('.utility_modal').modal('hide');
-    $.get( "{{ url_for('delete_collection') }}", {id:id}, function() {
-    }).done(function(e) {
-        if(e.length > 0){
-            buildCollectionList(e);
-        }else{
-            emptyCollection();
-        }
-        return true;
-    }).fail(function(e) {
-        console.log(e);
-        alert( "error collection: "+e );
-        return e;
-    })
-  }*/
 </script>
 {% endblock %}

@@ -13,7 +13,7 @@ app = Flask(__name__, template_folder='../static/src' , static_folder='../static
 app.config['SQLALCHEMY_DATABASE_URI'] = BD_NUVEM
 app.config['SECRET_KEY'] = 'secret'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=320)
+app.config['PERMANENT_SESSION_LIFETIME'] =  timedelta(minutes=60)
 
 login_manager = LoginManager(app)
 db = SQLAlchemy(app)

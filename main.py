@@ -90,25 +90,6 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
-""" @app.route('/itens/' , methods=['GET','POST'])
-@login_required
-def itens():
-    collections = []
-    # SELECT C.collection_id FROM user_collection AS C WHERE user_id=1
-    users = User_Collection.query.filter_by(user_id=current_user.id).all()
-    for itens in users:
-        collections.append(itens.collection_id)
-    # SELECT I.name, I.hash FROM item_in_collection AS C, items AS I WHERE C.collection_id=1 AND C.item_id=I.id ORDER BY I.name
-    itens_bd = item_in_collection.query.filter(item_in_collection.collection_id.in_(collections)).order_by(item_in_collection.item_id).all()
-    itens = []
-    for item in itens_bd:
-        itens.append(item.item_id)
-    itens_bd = Item.query.filter(Item.id.in_(itens)).all()
-    img = []
-    for iten in itens_bd:
-        img.append(get_img(iten.hash))
-    return render_template('itens.html' , img=img) """
   
 @app.route("/forgotpassword" , methods=['GET','POST'])
 def forgot_password():
@@ -168,7 +149,6 @@ def get_collections():
             res = {'description':i[0].description, 'name':i[0].name, 'id':i[0].id}
             result_collections.append(res)
         return jsonify(result_collections)
-        # return "---".join(str(i.name) for i in collections)
     except Exception as e:
         return e
 

@@ -54,6 +54,7 @@
 
 {% block script %}
 <script>
+
     $('#new_item_submit > div').hide();
 
     function toggleInputsItem(){
@@ -82,7 +83,7 @@
                     $('#decription_item').val('');
                     $('#type_item').selectedIndex = 0;
                     $('#collection_item').selectedIndex = 0;
-                    $('#image_item]').val('');
+                    $('#image_item').val('');
                 }).fail(function(e){
                     if(e.responseText = "400"){
                         $('#collection-danger').text( "*favor preencher todos os campos*")
@@ -115,13 +116,13 @@
         }
     }
     function setCollections(collections){
-        $('select[name="colecao_select"]').empty();
+        $('#collection_item').empty();
         if(collections.length == 0){
-            $('select[name="colecao_select"]').append('<option value="">Nenhuma coleção encontrada</option>');
+            $('#collection_item').append('<option value="">Nenhuma coleção encontrada</option>');
         }else{
-            $('select[name="colecao_select"]').append('<option value="">Selecione uma coleção</option>');
+            $('#collection_item').append('<option value="">Selecione uma coleção</option>');
             for(i = 0; i < collections.length; i++){
-                $('select[name="colecao_select"]').append('<option value="' + collections[i].id + '">' + collections[i].name + '</option>');
+                $('#collection_item').append('<option value="' + collections[i].id + '">' + collections[i].name + '</option>');
             }
         }
     }
@@ -152,6 +153,9 @@
         get_collections();
         get_types();
     }
-    attrAjax();
+
+    $('#item_submit').on('shown.bs.modal', function (event) {
+        attrAjax();
+    });
 </script>
 {% endblock %}
