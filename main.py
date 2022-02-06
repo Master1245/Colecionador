@@ -163,6 +163,19 @@ def get_types():
     except Exception as e:
         return e
 
+@app.route("/get_item" , methods=['GET','POST'])
+@login_required
+def get_item():
+    collection = []
+    collection_user = request.args.get('collection_id', 0, type=int)
+    itens_in_collection = item_in_collection.query.filter_by(collection_id=collection_user).all()
+    for i in itens_in_collection:
+        item = Item.query.filter_by(id=i.item_id).first()
+        img_link = get_img(item.hash)
+        result = {'name': item.name, 'description': item.description, 'type': item.type_id, 'link_img': img_link}	
+        collection.append(result)
+    return jsonify(collection)
+
 @app.route('/post_item' , methods=['GET','POST'])    
 @login_required
 def post_item():
@@ -183,20 +196,6 @@ def post_item():
         upload_img(hash=hash_img,img_name="img.jpg")
         return "201"
     return "401"
-
-    '''if True:
-        item = Item(name, description, item_type, hash)
-        db.session.add(item)
-        db.session.commit()
-        item = Item.query.filter_by(hash=hash).first().id
-        collection = item_in_collection(item, collection)
-        db.session.add(collection)
-        db.session.commit()
-        basepath = os.path.dirname(__file__)
-        upload_path = os.path.join(basepath+ "/CARDS/", '',"img.jpg")
-        img.save(upload_path)
-        upload_img("img.jpg",hash)
-        return "201"'''
 
 @app.route('/post_type' , methods=['GET','POST'])
 @login_required
@@ -232,19 +231,6 @@ def post_collection():
             return "400"
     except Exception as e:
         return e
-
-@app.route("/get_item" , methods=['GET','POST'])
-@login_required
-def get_item():
-    collection = []
-    collection_user = request.args.get('collection_id', 0, type=int)
-    itens_in_collection = item_in_collection.query.filter_by(collection_id=collection_user).all()
-    for i in itens_in_collection:
-        item = Item.query.filter_by(id=i.item_id).first()
-        img_link = get_img(item.hash)
-        result = {'name': item.name, 'description': item.description, 'type': item.type_id, 'link_img': img_link}	
-        collection.append(result)
-    return jsonify(collection)
 
 @app.route("/inventory" , methods=['GET','POST'])
 @login_required
