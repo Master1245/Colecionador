@@ -39,11 +39,11 @@
                     </div>
                 </form>
             </div>
-            <p class="fst-italic text-danger" id="collection-danger"></p>
+            <p class="fst-italic text-danger" id="item-danger"></p>
             <div class="modal-footer">
                 <button id="new_item_submit" type="button" class="btn btn-outline-light">
                     <p class="align-middle m-0"> Submeter </p>
-                    <div class="spinner-border text-light loading" role="status">
+                    <div class="spinner-border text-light loading" role="status" id="status_text_item">
                         <span class="visually-hidden">Loading...</span>
                     </div>
                 </button>
@@ -61,11 +61,38 @@
         $('#new_item_submit > p').toggle();
         $('#new_item_submit > div').toggle();
     }
+    function htmlStatusItem(color){
+        $("#new_item_submit").removeAttr('class');
+        $("#new_item_submit").attr('class', 'btn btn-outline-'+color);
+        $("#status_text_item").removeAttr('class');
+        $("#status_text_item").attr('class', 'spinner-border text-'+color+' loading');
+
+    }
+    function setStatusItem(status){
+        switch(status){
+            case 'default':
+                htmlStatusItem('light')
+                break;
+            case 'loading':
+                htmlStatusItem('warning')
+                break;
+            case 'success':
+                htmlStatusItem('success')
+                break;
+            case 'error':
+                htmlStatusItem('danger')
+                break;
+            default:
+                console.log('Status do request não reconhecido, verifique o código.');
+                break;
+        }
+    }
 
     $(function() {
         $('#new_item_submit').click(function() {
             if(true){
                 toggleInputsItem();
+                setStatusItem('loading');
                 dataFile = $('#item_post').serialize();
                 
                 event.preventDefault();
@@ -78,6 +105,7 @@
                     processData: false
                 }).done(function(e){
                     toggleInputsItem()
+                    setStatusItem('success');
 
                     $('#name_item').val('');
                     $('#decription_item').val('');
@@ -85,13 +113,15 @@
                     $('#collection_item').selectedIndex = 0;
                     $('#image_item').val('');
                 }).fail(function(e){
+                    toggleInputsItem()
+                    setStatusItem('error');
                     if(e.responseText = "400"){
-                        $('#collection-danger').text( "*favor preencher todos os campos*")
+                        $('#item-danger').text( "*favor preencher todos os campos*")
                     }
                     console.log( e.responseText );
                 });
             }else{
-                $('#collection-danger').text( "*favor preencher todos os campos*" )
+                $('#item-danger').text( "*favor preencher todos os campos*" )
             }
         });
     });
@@ -156,6 +186,7 @@
 
     $('#item_submit').on('shown.bs.modal', function (event) {
         attrAjax();
+        setStatusItem('default');
     });
 </script>
 {% endblock %}

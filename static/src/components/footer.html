@@ -1,49 +1,21 @@
 <!-- Footer -->
 <footer class="darken text-center text-white mt-3">
     <!-- Grid container -->
-    <div class="container p-5">
+    <div class="container p-4">
       <!-- Section: Text -->
-      <section class="mb-4">
+      <section>
         <p>
           Sistema de colecionar.
         </p>
+        <a href="https://github.com/Master1245">@Master1245</a>
+        <br>
+        <a href="https://github.com/Oicanji">@Oicanji</a>
       </section>
-      <!-- Section: Text -->
-      <hr>
-      <!-- Section: Links -->
-      <section class="">
-        <!--Grid row-->
-        <div class="row">
-          <!--Grid column-->
-          <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
-            <h5 class="text-uppercase">Você está aqui:</h5>
-  
-            <ul class="list-unstyled mb-0 text-start">
-              <li>
-                <a href="{{ url_for('logout') }}" class="text-white"><i class="bi bi-caret-right"></i>Login</a>
-              </li>
-              <li>
-                {% if(request.endpoint == '') %}
-                  <a href="#" class="text-white disable">├── Home</a>
-                {% else %}
-                  <a href="/" class="text-white">├── Home</a>
-                {% endif %}
-              </li>
-              <li>
-                <a href="/inventory" class="text-white">└── Inventory</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <!--Grid row-->
-      </section>
-      <!-- Section: Links -->
     </div>
     <!-- Grid container -->
   
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-      © 2020 Copyright:
       <h5 style="margin-bottom: -6px"><a class="text-white" href="https://getbootstrap.com/">Power by Boostrap {5.1}</a></h5>
       <p class="fst-italic" style="margin-bottom: -6px">and</p>
       <h5><a class="text-white" href="https://getbootstrap.com/">Python Flask System <i class="bi bi-lightning-charge-fill"></i></a></h5>
