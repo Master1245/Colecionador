@@ -41,7 +41,7 @@ class Item(db.Model, UserMixin):
     name = db.Column(db.String(64), nullable=False)
     description = db.Column(db.Text, nullable=False)
     hash = db.Column(db.String(200), nullable=False)
-    type_id = db.Column(db.Integer, db.ForeignKey('item_types.id'), nullable=False)
+    type_id = db.Column(db.Integer, db.ForeignKey('item_types.id', ondelete='CASCADE'), nullable=False)
 
     def __init__(self, name, description, type, hash):
         self.name = name
@@ -65,7 +65,7 @@ class Item_type(db.Model, UserMixin):
 
 class Colection(db.Model, UserMixin):
     __tablename__ = 'colections'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True, )
     name = db.Column(db.String(64), nullable=False)
     description = db.Column(db.Text, nullable=False)
 
@@ -88,7 +88,8 @@ class User_Collection(db.Model, UserMixin):
     __tablename__ = 'user_collection'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    collection_id = db.Column(db.Integer, db.ForeignKey('colections.id'), nullable=False)
+    collection_id = db.Column(db.Integer, db.ForeignKey('colections.id', ondelete='CASCADE'), nullable=False)
+
 
     def __init__(self, user_id, collection_id):
         self.user_id = user_id

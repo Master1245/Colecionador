@@ -166,37 +166,41 @@ def get_types():
 @app.route("/get_item" , methods=['GET','POST'])
 @login_required
 def get_item():
-    collection = []
-    collection_user = request.args.get('collection_id', 0, type=int)
-    itens_in_collection = item_in_collection.query.filter_by(collection_id=collection_user).all()
-    for i in itens_in_collection:
-        item = Item.query.filter_by(id=i.item_id).first()
-        img_link = get_img(item.hash)
-        result = {'name': item.name, 'description': item.description, 'type': item.type_id, 'link_img': img_link}	
-        collection.append(result)
-    return jsonify(collection)
-
+    try:
+        collection = []
+        collection_user = request.args.get('collection_id', 0, type=int)
+        itens_in_collection = item_in_collection.query.filter_by(collection_id=collection_user).all()
+        for i in itens_in_collection:
+            item = Item.query.filter_by(id=i.item_id).first()
+            img_link = get_img(item.hash)
+            result = {'name': item.name, 'description': item.description, 'type': item.type_id, 'link_img': img_link}	
+            collection.append(result)
+        return jsonify(collection)
+    except Exception as e:
+        return e
 @app.route('/post_item' , methods=['GET','POST'])    
 @login_required
 def post_item():
-    if request.method == "POST":
-        request.files['img_item'].save("./CARDS/" + "img.jpg")
-        hash_img = generate_password_hash(request.files['img_item'].filename)
-        name = request.form['name_item']
-        description = request.form['description_item']
-        type_id = request.form['type_select']
-        collection_id = request.form['colecao_select']
-        type_id = Item_type.query.filter_by(id=type_id).first()
-        item = Item(name, description, type_id.id, hash_img)
-        db.session.add(item)
-        db.session.commit()
-        collection = item_in_collection(item.id, collection_id)
-        db.session.add(collection)
-        db.session.commit()
-        upload_img(hash=hash_img,img_name="img.jpg")
-        return "201"
-    return "401"
-
+    try:
+        if request.method == "POST":
+            request.files['img_item'].save("./CARDS/" + "img.jpg")
+            hash_img = generate_password_hash(request.files['img_item'].filename)
+            name = request.form['name_item']
+            description = request.form['description_item']
+            type_id = request.form['type_select']
+            collection_id = request.form['colecao_select']
+            type_id = Item_type.query.filter_by(id=type_id).first()
+            item = Item(name, description, type_id.id, hash_img)
+            db.session.add(item)
+            db.session.commit()
+            collection = item_in_collection(item.id, collection_id)
+            db.session.add(collection)
+            db.session.commit()
+            upload_img(hash=hash_img,img_name="img.jpg")
+            return "201"
+        return "401"
+    except Exception as e:
+        return e
 @app.route('/post_type' , methods=['GET','POST'])
 @login_required
 def post_type():
@@ -225,6 +229,36 @@ def post_collection():
             collection_id = Colection.query.filter_by(description=description).first().id
             user_Collection = User_Collection(current_user.id, collection_id)
             db.session.add(user_Collection)
+            db.session.commit()
+            return "201"
+        else:
+            return "400"
+    except Exception as e:
+        return e
+
+@app.route("/delete_item", methods=['GET','POST'])
+@login_required
+def delete_item():
+    try:
+        item_id = request.args.get('item_id', 0, type=int)
+        if item_id:
+            item = Item.query.filter_by(id=item_id).first()
+            db.session.delete(item)
+            db.session.commit()
+            return "201"
+        else:
+            return "400"
+    except Exception as e:
+        return e
+
+@app.route("/delete_collection", methods=['GET','POST'])
+@login_required
+def delete_collection():
+    try:
+        collection_id = request.args.get('collection_id', 0, type=int)
+        if collection_id:
+            collection = Colection.query.filter_by(id=collection_id).first()
+            db.session.delete(collection)
             db.session.commit()
             return "201"
         else:
