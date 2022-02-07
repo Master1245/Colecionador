@@ -137,12 +137,14 @@
             types_list[i].color = getRandomBg();
         }
     }
+    list_item = [];
     function get_item(collection_id){
         loadingInfo()
         $.get( "{{ url_for('get_item') }}", {collection_id:collection_id}, function() {
         }).done(function(e) {
               if(e.length > 0){
-                  buildItemList(e);
+                    list_item = e;
+                    buildItemList(e);
               }else{
                   emptyItem();
               }
@@ -176,7 +178,10 @@
             append_text += '<div class="col-sm-6 col-md-3 mb-3">';
             append_text +=  `
             <div class="card darken-50">
-                <div class="card-body">
+                <div class="card-body position-relative">
+                    
+                    <div onClick="deleteItem(${list[i].id})" class="position-absolute top-0 end-0 bg-danger rounded ps-2 pe-2 pb-1 mt-1 me-1"> x </div>
+
                     <div class="cardImage" style="background-image: url('${list[i].link_img}');"></div>
                     <h3 class="card-title mt-2 mb-1">${list[i].name}</h3>`
             append_text += `<strong><span class="`+this_type.color+` rounded p-1 text-uppercase">`+this_type.name+`</span></strong>`
@@ -204,7 +209,83 @@
                     </div>
                 </div>
             </div>
-        </div>`);
-  }
+        </div>
+        `);
+    }
+    function deleteCollection(id){
+        $('.utility_body').empty();
+        $('.utility_body').append(`
+              <div class="pt-2 pb-2 pe-5 ps-5">
+                  <h1 class="mb-3">Você tem certeza que deseja excluir esta coleção?</h1>
+                  <div class="row">
+                      <div class="col-sm-6 text-end">
+                          <button class="btn btn-danger" onClick="deleteCollectionConfirm(${id})">Sim</button>
+                      </div>
+                      <div class="col-sm-6 text-start">
+                          <button class="btn btn-secondary" onClick="deleteCollectionCancel()">Não</button>
+                      </div>
+                  </div>
+              </div>`);
+        $('.utility_modal').modal('show');
+    }
+    function deleteCollectionCancel(){
+      $('.utility_modal').modal('hide');
+    }
+    function deleteCollectionConfirm(id){
+      $('.utility_modal').modal('hide');
+      $.get( "{{ url_for('delete_collection') }}", {collection_id:id}, function() {
+      }).done(function(e) {
+        if(e.length > 0){
+            window.location.href = "{{ url_for('inventory') }}";
+        }else{
+            alert( "error collection: "+e );
+        }
+      }).fail(function(e) {
+          console.log(e);
+          alert( "error collection: "+e );
+          return e;
+      })
+    }
+    function deleteItem(id){
+        
+        $('.utility_body').empty();
+        this_item = {};
+
+        for(const i in list_item){
+            if(list_item[i].id == id){
+                this_item = list_item[i];
+                break;
+            }
+        }
+        
+        console.log(this_item);
+        $('.utility_body').append(`
+              <div class="pt-2 pb-2 pe-5 ps-5">
+                  <h1 class="mb-3">Você tem certeza que deseja excluir o item ${this_item.name}?</h1>
+                  <div class="row">
+                      <div class="col-sm-6 text-end">
+                          <button class="btn btn-danger" onClick="deleteItemConfirm(${id})">Sim</button>
+                      </div>
+                      <div class="col-sm-6 text-start">
+                          <button class="btn btn-secondary" onClick="deleteItemCancel()">Não</button>
+                      </div>
+                  </div>
+              </div>`);
+        $('.utility_modal').modal('show');
+    }
+    function deleteItemCancel(){
+      $('.utility_modal').modal('hide');
+    }
+    function deleteItemConfirm(id){
+      $('.utility_modal').modal('hide');
+      $.get( "{{ url_for('delete_item') }}", {item_id:id}, function() {
+      }).done(function(e) {
+        window.location.href = "{{ url_for('inventory') }}";
+      }).fail(function(e) {
+          console.log(e);
+          alert( "error collection: "+e );
+          return e;
+      })
+    }
 </script>
 {% endblock %}
