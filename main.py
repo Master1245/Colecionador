@@ -173,11 +173,12 @@ def get_item():
         for i in itens_in_collection:
             item = Item.query.filter_by(id=i.item_id).first()
             img_link = get_img(item.hash)
-            result = {'name': item.name, 'description': item.description, 'type': item.type_id, 'link_img': img_link}	
+            result = {'id': item.id,'name': item.name, 'description': item.description, 'type': item.type_id, 'link_img': img_link}	
             collection.append(result)
         return jsonify(collection)
     except Exception as e:
         return e
+
 @app.route('/post_item' , methods=['GET','POST'])    
 @login_required
 def post_item():
@@ -201,6 +202,7 @@ def post_item():
         return "401"
     except Exception as e:
         return e
+
 @app.route('/post_type' , methods=['GET','POST'])
 @login_required
 def post_type():
