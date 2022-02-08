@@ -83,7 +83,6 @@ class item_in_collection(db.Model, UserMixin):
         self.item_id = item_id
         self.collection_id = collection_id
 
-
 class User_Collection(db.Model, UserMixin):
     __tablename__ = 'user_collection'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

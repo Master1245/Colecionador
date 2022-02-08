@@ -222,14 +222,16 @@
                           <button class="btn btn-danger" onClick="deleteCollectionConfirm(${id})">Sim</button>
                       </div>
                       <div class="col-sm-6 text-start">
-                          <button class="btn btn-secondary" onClick="deleteCollectionCancel()">Não</button>
+                          <button class="btn btn-secondary" onClick="modalOff()">Não</button>
                       </div>
                   </div>
               </div>`);
         $('.utility_modal').modal('show');
     }
-    function deleteCollectionCancel(){
-      $('.utility_modal').modal('hide');
+    function modalOff(){
+        $('.utility_body').empty();
+        
+        $('.utility_modal').modal('hide');
     }
     function deleteCollectionConfirm(id){
       $('.utility_modal').modal('hide');
@@ -247,8 +249,6 @@
       })
     }
     function deleteItem(id){
-        
-        $('.utility_body').empty();
         this_item = {};
 
         for(const i in list_item){
@@ -257,8 +257,6 @@
                 break;
             }
         }
-        
-        console.log(this_item);
         $('.utility_body').append(`
               <div class="pt-2 pb-2 pe-5 ps-5">
                   <h1 class="mb-3">Você tem certeza que deseja excluir o item ${this_item.name}?</h1>
@@ -267,15 +265,13 @@
                           <button class="btn btn-danger" onClick="deleteItemConfirm(${id})">Sim</button>
                       </div>
                       <div class="col-sm-6 text-start">
-                          <button class="btn btn-secondary" onClick="deleteItemCancel()">Não</button>
+                          <button class="btn btn-secondary" onClick="modalOff()">Não</button>
                       </div>
                   </div>
               </div>`);
         $('.utility_modal').modal('show');
     }
-    function deleteItemCancel(){
-      $('.utility_modal').modal('hide');
-    }
+
     function deleteItemConfirm(id){
       $('.utility_modal').modal('hide');
       $.get( "{{ url_for('delete_item') }}", {item_id:id}, function() {
@@ -287,5 +283,9 @@
           return e;
       })
     }
+    $('.utility_modal').on('hidden.bs.modal', function (e) {
+        $('.utility_body').empty();
+    });
+    
 </script>
 {% endblock %}
