@@ -268,7 +268,7 @@ def delete_collection():
     except Exception as e:
         return e
 
-@app.route("update_item", methods=['GET','POST'])
+@app.route("/update_item", methods=['GET','POST'])
 @login_required
 def update_item():
     try:
