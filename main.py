@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 from app import app,db
 from app.model import User, Item, Item_type, Colection, item_in_collection, User_Collection
 from werkzeug.security import generate_password_hash,check_password_hash
-from app.AWS import upload_img, get_img
+from app.AWS import upload_img, get_img, delete_img
 from flask import jsonify
 import os
 
@@ -245,6 +245,7 @@ def delete_item():
         item_id = request.args.get('item_id', 0, type=int)
         if item_id:
             item = Item.query.filter_by(id=item_id).first()
+            delete_img(item.hash)
             db.session.delete(item)
             db.session.commit()
             return "201"

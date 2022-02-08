@@ -23,3 +23,7 @@ def get_img(img_name):
 def upload_img(img_name, hash):
     s3 = boto3.client('s3', aws_access_key_id=SECRET_KEY, aws_secret_access_key=ACESS_ID, region_name=LOCATION)
     s3.upload_file(f"./CARDS/{img_name}", 'colecionador', hash+".jpg", ExtraArgs={'ContentType': "image/jpeg"})
+
+def delete_img(img_name):
+    s3 = boto3.client('s3', aws_access_key_id=SECRET_KEY, aws_secret_access_key=ACESS_ID, region_name=LOCATION)
+    s3.delete_object(Bucket='colecionador', Key=img_name+".jpg")
