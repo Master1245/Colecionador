@@ -268,6 +268,42 @@ def delete_collection():
     except Exception as e:
         return e
 
+@app.route("update_item", methods=['GET','POST'])
+@login_required
+def update_item():
+    try:
+        item_id = request.args.get('item_id', 0, type=int)
+        name = request.args.get('name', 0, type=str)
+        description = request.args.get('description', 0, type=str)
+        if item_id and name and description:
+            item = Item.query.filter_by(id=item_id).first()
+            item.name = name
+            item.description = description
+            db.session.commit()
+            return "201"
+        else:
+            return "400"
+    except Exception as e:
+        return e
+
+@app.route("/update_collection", methods=['GET','POST'])
+@login_required
+def update_collection():
+    try:
+        collection_id = request.args.get('collection_id', 0, type=int)
+        name = request.args.get('name', 0, type=str)
+        description = request.args.get('description', 0, type=str)
+        if collection_id and name and description:
+            collection = Colection.query.filter_by(id=collection_id).first()
+            collection.name = name
+            collection.description = description
+            db.session.commit()
+            return "201"
+        else:
+            return "400"
+    except Exception as e:
+        return e
+
 @app.route("/inventory" , methods=['GET','POST'])
 @login_required
 def inventory():
