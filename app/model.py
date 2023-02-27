@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(256), nullable=False)
     Token_reset = db.Column(db.String(256), nullable=True)
 
+
     def __init__(self, name, email, password):
         self.name = name
         self.email = email
